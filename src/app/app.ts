@@ -6,7 +6,6 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   imports: [MatSlideToggleModule],
   templateUrl: './app.html',
-  styleUrl: './app.css'
 })
 export class App {
   protected readonly title = signal('expense-tracker');
