@@ -1,0 +1,6 @@
+<div class="flex flex-row flex-wrap justify-start gap-5">
+  @for (category of categories(); track category.id) {
+  <category-card [category]="category"></category-card>
+  }
+  <category-card-create-new></category-card-create-new>
+</div>

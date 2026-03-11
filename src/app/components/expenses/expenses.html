@@ -1,0 +1,4 @@
+<h2 class="text-xl">Activity</h2>
+@for (expense of orderedExpenses(); track expense.id) {
+  <p>{{ expense.datetime.toLocaleString() }}</p>
+}
