@@ -12,7 +12,7 @@ import { Expenses } from './components/expenses/expenses';
 
 @Component({
   selector: 'app-root',
-  imports: [MatToolbarModule, RouterOutlet],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
 })
 export class App {}

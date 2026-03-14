@@ -5,6 +5,7 @@ import { CategoriesState } from '../../state/categories/categories.state';
 import { Category } from '../../state/categories/categories.model';
 import { MoneyInput } from '../../components/money-input/money-input';
 import { MatButtonModule } from '@angular/material/button';
+import { ExpensesActions } from '../../state/expenses/expenses.action';
 
 @Component({
   standalone: true,
@@ -16,8 +17,11 @@ export class CategoryPage {
   moneyInput = signal(0);
   createExpenseButtonDisabled = computed(() => this.moneyInput() <= 0);
 
-
-  constructor(route: ActivatedRoute, store: Store, router: Router) {
+  constructor(
+    private store: Store,
+    private router: Router,
+    route: ActivatedRoute,
+  ) {
     const id = route.snapshot.paramMap.get('id');
     if (!id) {
       router.navigateByUrl('/');
@@ -36,6 +40,11 @@ export class CategoryPage {
   }
 
   onSaveExpenseButton() {
-    alert('todo');
+    if (this.createExpenseButtonDisabled()) {
+      return;
+    }
+
+    this.store.dispatch(new ExpensesActions.Add(new Date(), this.moneyInput(), this.category.id));
+    this.router.navigateByUrl('/');
   }
 }

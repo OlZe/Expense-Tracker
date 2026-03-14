@@ -19,7 +19,7 @@ export class Expenses {
     this.orderedExpenses = computed(() => {
       let orderedExpenses = new Map<TimeRange, ExpenseWithCategory[]>();
 
-      for (const expense of expenses().slice().sort()) {
+      for (const expense of expenses().slice().sort().reverse()) {
         const key = this.getTimeRange(expense.datetime);
         let value = orderedExpenses.get(key) ?? [];
         value.push(expense);

@@ -1,13 +1,14 @@
-<h2 class="text-2xl">Input Expense for {{ category.name }}</h2>
+<h1 class="text-3xl">{{ category.name }}</h1>
 
-<money-input (inputNumber)="onMoneyInput($event)"></money-input>
-
-<button
-  matButton="filled"
-  [disabled]="createExpenseButtonDisabled()"
-  (click)="onSaveExpenseButton()"
-  class="w-full mt-15"
->
-  Save
-</button>
-
+<div class="flex flex-col flex-nowrap gap-11 mt-11">
+  <h2 class="text-2xl">Enter expense</h2>
+  <money-input (inputNumber)="onMoneyInput($event)"></money-input>
+  <button
+    matButton="filled"
+    [disabled]="createExpenseButtonDisabled()"
+    (click)="onSaveExpenseButton()"
+    class="w-full"
+  >
+    Save
+  </button>
+</div>
