@@ -1,0 +1,17 @@
+<div class="relative">
+  <!-- Visible display -->
+  <p
+    class="inset-0 px-3 py-2 text-center text-3xl pointer-events-none"
+  >
+    {{ formattedValue }}
+  </p>
+
+  <!-- Hidden input -->
+  <input
+    type="text"
+    inputmode="decimal"
+    class="absolute inset-0 w-full h-full opacity-0"
+    [(ngModel)]="inputValue"
+    (input)="onInput()"
+  />
+</div>

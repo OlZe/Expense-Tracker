@@ -6,19 +6,13 @@ import { ExpensesState } from './state/expenses/expenses.state';
 import { ExpenseWithCategory } from './state/expenses/expenses.model';
 import { JsonPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Graph } from "./components/graph/graph";
-import { CategoryCards } from "./components/categories/category-cards";
-import { Expenses } from "./components/expenses/expenses";
+import { Graph } from './components/graph/graph';
+import { CategoryCards } from './components/categories/category-cards';
+import { Expenses } from './components/expenses/expenses';
 
 @Component({
   selector: 'app-root',
-  imports: [MatToolbarModule, Graph, CategoryCards, Expenses],
+  imports: [MatToolbarModule, RouterOutlet],
   templateUrl: './app.html',
 })
-export class App {
-  data: Signal<any>
-
-  constructor(private store: Store) {
-    this.data = this.store.selectSignal(ExpensesState.getExpenseById('1'))
-  }
-}
+export class App {}

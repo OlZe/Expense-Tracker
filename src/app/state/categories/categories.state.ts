@@ -1,7 +1,7 @@
-import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { CategoriesStateModel } from "./categories.model";
-import { Injectable } from "@angular/core";
-import { CategoryActions } from "./categories.action";
+import { Action, createSelector, Selector, State, StateContext } from '@ngxs/store';
+import { CategoriesStateModel } from './categories.model';
+import { Injectable } from '@angular/core';
+import { CategoryActions } from './categories.action';
 
 @State<CategoriesStateModel>({
   name: 'categories',
@@ -9,18 +9,18 @@ import { CategoryActions } from "./categories.action";
     categories: [
       {
         id: 'transport',
-        name: '🚗 Transport'
+        name: '🚗 Transport',
       },
       {
         id: 'health',
-        name: '❤️‍🩹 Health'
+        name: '❤️‍🩹 Health',
       },
       {
         id: 'food',
-        name: '🍽️ Food & Drinks'
-      }
-    ]
-  }
+        name: '🍽️ Food & Drinks',
+      },
+    ],
+  },
 })
 @Injectable()
 export class CategoriesState {
@@ -29,11 +29,10 @@ export class CategoriesState {
     return state.categories;
   }
 
-  @Selector()
-  static getCategoryById(state: CategoriesStateModel) {
-    return (id: string) => {
+  static getCategoryById(id: string) {
+    return createSelector([CategoriesState], (state: CategoriesStateModel) => {
       return state.categories.find((c) => c.id === id);
-    }
+    });
   }
 
   @Action(CategoryActions.Add)
@@ -43,16 +42,15 @@ export class CategoriesState {
     const nameIsDuplicate = state.categories.some((c) => c.name === action.name);
     if (nameIsDuplicate) throw new Error(`A category with the name ${action.name} already exists.`);
 
-
     ctx.patchState({
       categories: [
         ...state.categories,
         {
           id: crypto.randomUUID(),
           name: action.name,
-        }
-      ]
-    })
+        },
+      ],
+    });
   }
 
   @Action(CategoryActions.Edit)
@@ -60,8 +58,7 @@ export class CategoriesState {
     const state = ctx.getState();
 
     const index = state.categories.findIndex((c) => c.id === action.category.id);
-    if (index < 0) throw new Error(`Category ${action.category.id} doesn't exist.`)
-
+    if (index < 0) throw new Error(`Category ${action.category.id} doesn't exist.`);
 
     ctx.patchState({
       categories: [
@@ -70,8 +67,8 @@ export class CategoriesState {
           ...state.categories[index],
           ...action.category,
         },
-        ...state.categories.slice(index + 1)
-      ]
+        ...state.categories.slice(index + 1),
+      ],
     });
   }
 
@@ -83,10 +80,7 @@ export class CategoriesState {
     if (index < 0) throw new Error(`Category ${action.id} doesn't exist.`);
 
     ctx.patchState({
-      categories: [
-        ...state.categories.slice(0, index),
-        ...state.categories.slice(index + 1)
-      ]
-    })
+      categories: [...state.categories.slice(0, index), ...state.categories.slice(index + 1)],
+    });
   }
 }
