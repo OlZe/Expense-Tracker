@@ -1,5 +1,10 @@
-import { Component, input, Input, signal } from '@angular/core';
+import { Component, input, Input, output, signal } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+type DigitDisplayElement = {
+  text: string;
+  format: 'entered' | 'placeholder';
+};
 
 @Component({
   selector: 'money-input',
@@ -9,47 +14,58 @@ import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/f
 })
 export class MoneyInput {
   inputValue: string = '';
-  formattedValue: string = '0,00 €';
+  formattedValue = {
+    euros: { text: '0', format: 'placeholder' } as DigitDisplayElement,
+    cents: [{ kind: 'string', text: '00', format: 'placeholder' } as DigitDisplayElement],
+  };
+  isDecimalPointTyped = false;
+
+  inputNumber = output<number>();
 
   private formatter = new Intl.NumberFormat('de-DE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 
   onInput() {
-    console.log('before', this.inputValue);
+    let inputNum = 0;
 
-    // Replace , with .
-    const cleaned1 = this.inputValue.replaceAll(',', '.');
+    let cleanedInput = this.inputValue.replaceAll(',', '.');
+    cleanedInput = cleanedInput.replace(/[^\d.]/g, '');
 
-    // Remove all characters which arent . or digits
-    const cleaned2 = cleaned1.replace(/[^\d.]/g, '');
+    const decimalIndex = cleanedInput.indexOf('.');
+    this.isDecimalPointTyped = decimalIndex >= 0;
 
-    // Handle multiple periods
-    let cleaned3 = cleaned2;
-    const multiplePeriods = (cleaned2.match(/\./g)?.length ?? 0) > 1;
-    if (multiplePeriods) {
-      // If there are multiple periods, then there must've been a 2nd period inserted in last position
-      cleaned3 = cleaned2.slice(0, -1);
+    const euroInput = cleanedInput.slice(0, this.isDecimalPointTyped ? decimalIndex : undefined);
+
+    if (!euroInput) {
+      this.formattedValue.euros = { text: '0', format: 'placeholder' };
+      inputNum = 0;
+    } else {
+      const euroInputNumber = Number.parseInt(euroInput); // Only got chars until first . so digits are good
+      inputNum = euroInputNumber;
+      this.formattedValue.euros = {
+        text: this.formatter.format(euroInputNumber),
+        format: 'entered',
+      };
     }
 
-    // If entering a 3rd digit after decimal, replace
-    // ie: 0.17 (old) => 0.179 (enter) => 0.19 (new)
-    let cleaned4 = cleaned3;
-    const thirdDigitMatch = cleaned3.match(/\.\d\d\d/);
-    if (thirdDigitMatch && thirdDigitMatch.length > 0) {
-      cleaned4 = cleaned3.slice(0, -2) + cleaned3.charAt(cleaned3.length - 1);
+    let centInput = this.isDecimalPointTyped ? cleanedInput.slice(decimalIndex + 1) : undefined;
+    centInput = centInput?.replaceAll('.', ''); // Ignore duplicate decimals so only digits remain
+    if (!centInput || centInput.length == 0) {
+      this.formattedValue.cents = [{ text: '00', format: 'placeholder' }];
+    } else if (centInput.length == 1) {
+      this.formattedValue.cents = [
+        { text: centInput, format: 'entered' },
+        { text: '0', format: 'placeholder' },
+      ];
+      inputNum += Number.parseInt(centInput) / 10;
+    } else if (centInput.length > 1) {
+      centInput = centInput.slice(0, 2);
+      this.formattedValue.cents = [{ text: centInput, format: 'entered' }];
+      inputNum += Number.parseInt(centInput) / 100;
     }
 
-    this.inputValue = cleaned4;
-    console.log('after clean', this.inputValue);
-
-    let inputNumber = Number.parseFloat(this.inputValue);
-    if (inputNumber < 0 || Number.isNaN(inputNumber)) {
-      inputNumber = 0;
-    }
-
-    this.formattedValue = `${this.formatter.format(inputNumber)} €`;
-    console.log('formatted', this.formattedValue);
+    this.inputNumber.emit(inputNum);
   }
 }

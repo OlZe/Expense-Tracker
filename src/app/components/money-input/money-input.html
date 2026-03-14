@@ -1,10 +1,26 @@
 <div class="relative">
   <!-- Visible display -->
-  <p
-    class="inset-0 px-3 py-2 text-center text-3xl pointer-events-none"
+  <div
+    class="inset-0 px-3 py-2 text-center pointer-events-none flex flex-row flex-nowrap justify-center align-top tracking-wider"
   >
-    {{ formattedValue }}
-  </p>
+    <!-- euros -->
+    <span class="text-5xl" [class.text-gray-600]="formattedValue.euros.format === 'placeholder'">
+      {{ formattedValue.euros.text }}</span
+    >
+
+    <!-- decimal point -->
+    <span class="text-5xl" [class.text-gray-600]="!isDecimalPointTyped">,</span>
+
+    <!-- cents -->
+    @for (centElement of formattedValue.cents; track $index) {
+      <span class="text-3xl" [class.text-gray-600]="centElement.format === 'placeholder'">
+        {{ centElement.text }}</span
+      >
+    }
+
+    <!-- currency symbol -->
+    <span class="text-gray-600 text-3xl"> €</span>
+  </div>
 
   <!-- Hidden input -->
   <input
@@ -15,3 +31,4 @@
     (input)="onInput()"
   />
 </div>
+
