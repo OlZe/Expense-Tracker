@@ -8,15 +8,15 @@ import { CategoryActions } from './categories.action';
   defaults: {
     categories: [
       {
-        id: 'transport',
+        id: 'default-transport',
         name: '🚗 Transport',
       },
       {
-        id: 'health',
+        id: 'default-health',
         name: '❤️‍🩹 Health',
       },
       {
-        id: 'food',
+        id: 'default-food',
         name: '🍽️ Food & Drinks',
       },
     ],

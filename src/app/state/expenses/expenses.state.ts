@@ -10,21 +10,21 @@ import { CategoriesState } from '../categories/categories.state';
   defaults: {
     expenses: [
       {
-        id: '1',
-        categoryId: 'transport',
-        datetime: new Date(2026, 2, 11, 9, 17),
+        id: 'default-1',
+        categoryId: 'default-transport',
+        datetime: new Date(),
         price: 2.75,
       },
       {
-        id: '2',
-        categoryId: 'transport',
-        datetime: new Date(2026, 2, 11, 17, 32),
+        id: 'default-2',
+        categoryId: 'default-transport',
+        datetime: new Date(),
         price: 2.75,
       },
       {
-        id: '3',
-        categoryId: 'food',
-        datetime: new Date(2026, 2, 11, 18, 30),
+        id: 'default-3',
+        categoryId: 'default-food',
+        datetime: new Date(),
         price: 7.9,
       },
     ],
