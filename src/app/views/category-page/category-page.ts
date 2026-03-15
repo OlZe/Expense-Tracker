@@ -56,7 +56,9 @@ export class CategoryPage {
     }
 
     this.store
-      .dispatch(new ExpensesActions.Add(new Date(), this.moneyInput(), this.category.id))
+      .dispatch(
+        new ExpensesActions.Add(new Date().toISOString(), this.moneyInput(), this.category.id),
+      )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

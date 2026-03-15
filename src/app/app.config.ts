@@ -11,6 +11,7 @@ import { withNgxsStoragePlugin } from '@ngxs/storage-plugin';
 import { provideStore } from '@ngxs/store';
 import { ExpensesState } from './state/expenses/expenses.state';
 import { HomePage } from './views/home-page/home-page';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,5 +22,6 @@ export const appConfig: ApplicationConfig = {
       withNgxsStoragePlugin({ keys: '*' }),
       withNgxsReduxDevtoolsPlugin(),
     ),
+    provideNativeDateAdapter()
   ],
 };

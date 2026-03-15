@@ -1,4 +1,4 @@
-import { Component, input, Input, output, signal } from '@angular/core';
+import { Component, effect, input, Input, output, signal } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 type DigitDisplayElement = {
@@ -13,6 +13,7 @@ type DigitDisplayElement = {
   standalone: true,
 })
 export class MoneyInput {
+  initValue = input<number>(0);
   inputValue: string = '';
   formattedValue = {
     euros: { text: '0', format: 'placeholder' } as DigitDisplayElement,
@@ -27,7 +28,14 @@ export class MoneyInput {
     maximumFractionDigits: 0,
   });
 
-  onInput() {
+  constructor() {
+    effect(() => {
+      this.inputValue = this.initValue().toString();
+      this.parseAndFormatInput();
+    })
+  }
+
+  parseAndFormatInput() {
     let inputNum = 0;
 
     let cleanedInput = this.inputValue.replaceAll(',', '.');

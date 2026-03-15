@@ -7,7 +7,7 @@ export namespace ExpensesActions {
     static readonly type = `${ACTION_SCOPE} Add expense`;
     public id = crypto.randomUUID();
     constructor(
-      public datetime: Date,
+      public datetime: string,
       public price: number,
       public categoryId?: string,
     ) {}

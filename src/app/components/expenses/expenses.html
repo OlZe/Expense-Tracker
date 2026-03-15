@@ -7,12 +7,13 @@
   </div>
 
   @for (expense of orderedExpenses().get(timeRange); track expense.id) {
-    <div
+    <a
       class="flex flex-row flex-nowrap justify-between items-center border border-gray-700 rounded-xl p-3 mt-2"
+      [routerLink]="['/expense', expense.id]"
     >
       <p>{{ expense.category?.name ?? 'unknown category' }}</p>
       <p class="font-bold">{{ expense.price | euro }}</p>
-    </div>
+    </a>
   }
 } @empty {
   <p class="text-center text-gray-400 mt-5 text-sm whitespace-pre-line">

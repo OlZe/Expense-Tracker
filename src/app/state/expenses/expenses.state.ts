@@ -10,19 +10,19 @@ import { CategoryActions, ExpensesActions } from './expenses.action';
       'default-1': {
         id: 'default-1',
         categoryId: 'default-transport',
-        datetime: new Date(),
+        datetime: new Date().toISOString(),
         price: 2.75,
       },
       'default-2': {
         id: 'default-2',
         categoryId: 'default-transport',
-        datetime: new Date(),
+        datetime: new Date().toISOString(),
         price: 2.75,
       },
       'default-3': {
         id: 'default-3',
         categoryId: 'default-food',
-        datetime: new Date(),
+        datetime: new Date().toISOString(),
         price: 7.9,
       },
     },
@@ -53,6 +53,20 @@ export class ExpensesState {
           category: expense.categoryId ? state.categories[expense.categoryId] : null,
         }) as ExpenseWithCategory,
     );
+  }
+
+  static getExpensesWithCategoryById(id: string) {
+    return createSelector([ExpensesState], (state: ExpensesStateModel) => {
+      if (!(id in state.expenses)) {
+        return undefined;
+      }
+
+      const expense = state.expenses[id];
+      return {
+        ...expense,
+        category: expense.categoryId ? state.categories[expense.categoryId] : null,
+      } as ExpenseWithCategory;
+    });
   }
 
   @Selector()

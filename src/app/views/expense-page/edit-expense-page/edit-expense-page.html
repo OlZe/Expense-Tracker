@@ -1,0 +1,44 @@
+<div style="view-transition-name: slide-view-over">
+  <form class="flex flex-col flex-nowrap gap-11" #form="ngForm">
+    <h1 class="text-3xl">Edit expense</h1>
+
+    <money-input [initValue]="expense.price" (inputNumber)="changePrice($event)"></money-input>
+
+    <mat-form-field>
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="daypicker" [(ngModel)]="datetime" name="date" required />
+      <mat-datepicker #daypicker></mat-datepicker>
+      <mat-datepicker-toggle [for]="daypicker" matSuffix></mat-datepicker-toggle>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Time</mat-label>
+      <input
+        matInput
+        [matTimepicker]="timepicker"
+        [(ngModel)]="datetime"
+        [ngModelOptions]="{ updateOn: 'blur' }"
+        name="time"
+        required
+      />
+      <mat-timepicker #timepicker />
+      <mat-timepicker-toggle [for]="timepicker" matSuffix />
+    </mat-form-field>
+
+    @if (allCategories.length > 0) {
+      <mat-form-field>
+        <mat-label>Category</mat-label>
+        <mat-select [(value)]="expense.categoryId">
+          <mat-option>None</mat-option>
+          @for (category of allCategories; track category.id) {
+            <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <p>⚠️ You have no categories.<br />Go back to the home screen to create a category.</p>
+    }
+
+    <button matButton="filled" (click)="saveExpense()" [disabled]="form.invalid">Save</button>
+  </form>
+</div>
