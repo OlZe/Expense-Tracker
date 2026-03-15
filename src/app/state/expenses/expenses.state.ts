@@ -81,6 +81,11 @@ export class ExpensesState {
     );
   }
 
+  @Selector()
+  static getCategorylessExpenses(state: ExpensesStateModel) {
+    return state.expenses.filter((e) => !e.categoryId);
+  }
+
   @Action(ExpensesActions.Add)
   addExpense(ctx: StateContext<ExpensesStateModel>, action: ExpensesActions.Add) {
     const state = ctx.getState();
@@ -145,5 +150,20 @@ export class ExpensesState {
     ctx.patchState({
       expenses: newExpenses,
     });
+  }
+
+  @Action(CategoryActions.Add)
+  addCategory(ctx: StateContext<ExpensesStateModel>, action: CategoryActions.Add) {
+    if (action.assignCategorylessExpensesToThis) {
+      const state = ctx.getState();
+
+      const newExpenses = state.expenses.map((e) =>
+        e.categoryId ? e : { ...e, categoryId: action.id },
+      );
+
+      ctx.patchState({
+        expenses: newExpenses,
+      });
+    }
   }
 }

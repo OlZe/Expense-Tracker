@@ -46,7 +46,7 @@ export class CategoriesState {
       categories: [
         ...state.categories,
         {
-          id: crypto.randomUUID(),
+          id: action.id,
           name: action.name,
         },
       ],

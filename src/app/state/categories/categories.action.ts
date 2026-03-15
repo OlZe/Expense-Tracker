@@ -5,7 +5,12 @@ const ACTION_SCOPE = '[Category]';
 export namespace CategoryActions {
   export class Add {
     static readonly type = `${ACTION_SCOPE} Add`;
-    constructor(public name: string) {}
+    public id = crypto.randomUUID();
+
+    constructor(
+      public name: string,
+      public assignCategorylessExpensesToThis: boolean,
+    ) {}
   }
 
   export class Edit {
