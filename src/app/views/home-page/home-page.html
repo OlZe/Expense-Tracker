@@ -1,5 +1,8 @@
-<div class="flex flex-col flex-nowrap gap-y-5" style="view-transition-name: slide-view-over;">
+<div class="flex flex-col flex-nowrap gap-y-5" style="view-transition-name: slide-view-over">
   <graph></graph>
   <category-cards></category-cards>
-  <expenses></expenses>
+  <expenses
+    [expenses]="allExpenses()"
+    [emptyMessage]="'You don\'t have any expenses tracked yet.\nStart by tapping a category.'"
+  ></expenses>
 </div>

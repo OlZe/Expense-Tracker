@@ -15,8 +15,7 @@
     </div>
   }
 } @empty {
-  <p class="text-center text-gray-400 mt-5 text-sm">
-    You don't have any expenses tracked yet.
-    <br />Start by tapping a category.
+  <p class="text-center text-gray-400 mt-5 text-sm whitespace-pre-line">
+    {{ emptyMessage() }}
   </p>
 }

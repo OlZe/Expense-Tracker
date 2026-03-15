@@ -8,16 +8,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { ExpensesActions } from '../../state/expenses/expenses.action';
 import { MatIconModule } from '@angular/material/icon';
 import { SnackbarService } from '../../services/snackbar.service';
+import { Expense, ExpenseWithCategory } from '../../state/expenses/expenses.model';
+import { ExpensesState } from '../../state/expenses/expenses.state';
+import { Expenses } from "../../components/expenses/expenses";
 
 @Component({
   standalone: true,
   templateUrl: './category-page.html',
-  imports: [MoneyInput, MatButtonModule, MatIconModule, RouterLink],
+  imports: [MoneyInput, MatButtonModule, MatIconModule, RouterLink, Expenses],
 })
 export class CategoryPage {
   category!: Category;
   moneyInput = signal(0);
   createExpenseButtonDisabled = computed(() => this.moneyInput() <= 0);
+  associatedExpenses!: ExpenseWithCategory[];
 
   constructor(
     private store: Store,
@@ -36,6 +40,9 @@ export class CategoryPage {
       return;
     }
     this.category = category;
+    this.associatedExpenses = store
+      .selectSnapshot(ExpensesState.getExpensesWithCategory)
+      .filter((e) => e.categoryId === category.id);
   }
 
   onMoneyInput(inputNum: number) {
