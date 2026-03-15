@@ -1,5 +1,9 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, Type } from '@angular/core';
-import { provideRouter, withViewTransitions } from '@angular/router';
+import {
+  provideRouter,
+  withHashLocation,
+  withViewTransitions,
+} from '@angular/router';
 
 import { routes } from './app.routes';
 import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
@@ -11,7 +15,7 @@ import { HomePage } from './views/home-page/home-page';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withViewTransitions()),
+    provideRouter(routes, withViewTransitions(), withHashLocation()),
     provideStore(
       [ExpensesState],
       withNgxsStoragePlugin({ keys: '*' }),
