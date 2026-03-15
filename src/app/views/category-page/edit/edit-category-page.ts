@@ -37,7 +37,6 @@ type DeleteView =
     MatCheckboxModule,
   ],
   templateUrl: './edit-category-page.html',
-  styleUrl: './edit-category-page.scss',
   standalone: true,
 })
 export class EditCategoryDialog {

@@ -11,6 +11,12 @@
   ))
 }
 
+.app-btn-delete {
+  @include mat.button-overrides((
+    filled-container-color: orange,
+  ));
+}
+
 html {
   height: 100%;
   @include mat.theme(

@@ -15,6 +15,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { ExpensesActions } from '../../../state/expenses/expenses.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   standalone: true,
@@ -27,6 +29,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
+    MatIconModule,
+    MatCheckboxModule,
   ],
   templateUrl: './edit-expense-page.html',
 })
@@ -34,6 +38,7 @@ export class EditExpensePage {
   expense!: Expense;
   datetime!: Date;
   allCategories!: Category[];
+  deleteConfirmed = false;
 
   constructor(
     private store: Store,
@@ -76,6 +81,25 @@ export class EditExpensePage {
         next: () => {
           this.snackbarService.show('Expense edited.');
           this.router.navigate(['expense', this.expense.id]);
+        },
+        error: (message) => {
+          this.snackbarService.error(message);
+        },
+      });
+  }
+
+  deleteExpense() {
+    if (!this.deleteConfirmed) {
+      return;
+    }
+
+    this.store
+      .dispatch(new ExpensesActions.Delete(this.expense.id))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.snackbarService.show('Expense deleted.');
+          this.router.navigateByUrl('/');
         },
         error: (message) => {
           this.snackbarService.error(message);
