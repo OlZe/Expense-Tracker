@@ -8,9 +8,11 @@
       <input matInput [(ngModel)]="newName" name="newName" />
     </mat-form-field>
 
-    <p class="text-gray-500">
-      Changing the name will also change the name in all associated expenses.
-    </p>
+    @if (deleteView.kind === 'with expenses') {
+      <p class="text-gray-500">
+        Changing the name will also change the name in all associated expenses.
+      </p>
+    }
 
     <button
       matButton="filled"
@@ -24,19 +26,31 @@
 
   <h2 class="text-2xl mt-15">Delete</h2>
 
-  <form class="mt-5">
-    <mat-radio-group
-      class="flex flex-col flex-nowrap gap-5"
-      [(ngModel)]="selectedDeleteMethod"
-      name="selectedDeleteMethod"
-    >
-      <mat-radio-button value="dontDeleteExpenses">
-        Only delete this category. Associated expenses will have their category changed to 'unknown category'.
-      </mat-radio-button>
-      <mat-radio-button value="deleteExpenses">
-        ⚠️ Delete this category and all associated expenses.
-      </mat-radio-button>
-    </mat-radio-group>
+  <form class="mt-5 flex flex-col flex-nowrap items-start">
+    @if (deleteView.kind === 'with expenses') {
+      <p>
+        ⚠️ This category has recorded expenses associated with it. How would you like to handle
+        them?
+      </p>
+      <mat-radio-group
+        class="flex flex-col flex-nowrap gap-5 mt-5"
+        [(ngModel)]="deleteView.selectedMethod"
+        name="deleteView.selectedMethod"
+      >
+        <mat-radio-button value="dontDeleteExpenses">
+          Only delete this category. Associated expenses will have their category changed to
+          'unknown category'.
+        </mat-radio-button>
+        <mat-radio-button value="deleteExpenses">
+          Delete this category and all associated expenses.
+        </mat-radio-button>
+      </mat-radio-group>
+    } @else if (deleteView.kind === 'without expenses') {
+      <p>This category has no recorded expenses.</p>
+      <mat-checkbox [(ngModel)]="deleteView.confirmed" name="deleteView.confirmed" class="mt-5"
+        >Yes, really delete</mat-checkbox
+      >
+    }
 
     <button
       matButton="filled"

@@ -46,7 +46,6 @@ import { CategoryActions, ExpensesActions } from './expenses.action';
 export class ExpensesState {
   @Selector()
   static getExpensesWithCategory(state: ExpensesStateModel) {
-    console.log(state);
     return Object.values(state.expenses).map(
       (expense) =>
         ({

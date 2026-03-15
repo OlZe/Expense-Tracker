@@ -13,6 +13,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { Category } from '../../../state/expenses/expenses.model';
 import { ExpensesState } from '../../../state/expenses/expenses.state';
 import { CategoryActions } from '../../../state/expenses/expenses.action';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+type DeleteView =
+  | {
+      kind: 'with expenses';
+      selectedMethod?: 'deleteExpenses' | 'dontDeleteExpenses';
+    }
+  | {
+      kind: 'without expenses';
+      confirmed: boolean;
+    };
 
 @Component({
   imports: [
@@ -23,6 +34,7 @@ import { CategoryActions } from '../../../state/expenses/expenses.action';
     MatButtonModule,
     MatRadioModule,
     MatIconModule,
+    MatCheckboxModule,
   ],
   templateUrl: './edit-category-page.html',
   styleUrl: './edit-category-page.scss',
@@ -31,7 +43,7 @@ import { CategoryActions } from '../../../state/expenses/expenses.action';
 export class EditCategoryDialog {
   readonly category!: Category;
   newName!: string;
-  selectedDeleteMethod?: 'deleteExpenses' | 'dontDeleteExpenses';
+  deleteView!: DeleteView;
 
   constructor(
     private store: Store,
@@ -52,6 +64,12 @@ export class EditCategoryDialog {
     }
     this.category = category;
     this.newName = category.name;
+    const hasExpenses =
+      store.selectSnapshot(ExpensesState.getExpensesWithCategory).filter((e) => e.categoryId === id)
+        .length > 0;
+    this.deleteView = hasExpenses
+      ? { kind: 'with expenses', selectedMethod: undefined }
+      : { kind: 'without expenses', confirmed: false };
   }
 
   isChangeNameButtonDisabled(): boolean {
@@ -84,7 +102,11 @@ export class EditCategoryDialog {
   }
 
   isDeleteDisabled(): boolean {
-    return !this.selectedDeleteMethod;
+    if (this.deleteView.kind === 'with expenses') {
+      return !this.deleteView.selectedMethod;
+    } else {
+      return !this.deleteView.confirmed;
+    }
   }
 
   delete() {
@@ -92,20 +114,19 @@ export class EditCategoryDialog {
       return;
     }
 
+    const deleteAllAssociatedExpenses =
+      this.deleteView.kind === 'with expenses'
+        ? this.deleteView.selectedMethod === 'deleteExpenses'
+        : false;
+
     this.store
-      .dispatch(
-        new CategoryActions.Delete(
-          this.category.id,
-          this.selectedDeleteMethod === 'deleteExpenses',
-        ),
-      )
+      .dispatch(new CategoryActions.Delete(this.category.id, deleteAllAssociatedExpenses))
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          const message =
-            this.selectedDeleteMethod === 'deleteExpenses'
-              ? `Deleted ${this.category.name} and all its expenses.`
-              : `Deleted ${this.category.name}`;
+          const message = deleteAllAssociatedExpenses
+            ? `Deleted ${this.category.name} and all its expenses.`
+            : `Deleted ${this.category.name}`;
           this.snackbarService.show(message);
           this.router.navigateByUrl('/');
         },
