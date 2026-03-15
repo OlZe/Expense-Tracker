@@ -10,4 +10,9 @@ export class SnackbarService {
   show(message: string) {
     this.snackbar.open(message, 'OK', { duration: 3000 });
   }
+
+  // TODO: Styling
+  error(message: string) {
+    this.snackbar.open(message, 'OK', { duration: 3000, panelClass: 'snackbar-error' });
+  }
 }

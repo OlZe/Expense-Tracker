@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, signal, Signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { MoneyInput } from '../../components/money-input/money-input';
@@ -9,6 +9,8 @@ import { SnackbarService } from '../../services/snackbar.service';
 import { Category, Expense, ExpenseWithCategory } from '../../state/expenses/expenses.model';
 import { ExpensesState } from '../../state/expenses/expenses.state';
 import { Expenses } from '../../components/expenses/expenses';
+import { takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
@@ -25,6 +27,7 @@ export class CategoryPage {
     private store: Store,
     private router: Router,
     private snackbarService: SnackbarService,
+    private destroyRef: DestroyRef,
     route: ActivatedRoute,
   ) {
     const id = route.snapshot.paramMap.get('id');
@@ -52,8 +55,17 @@ export class CategoryPage {
       return;
     }
 
-    this.store.dispatch(new ExpensesActions.Add(new Date(), this.moneyInput(), this.category.id));
-    this.router.navigateByUrl('/');
-    this.snackbarService.show('Expense created.');
+    this.store
+      .dispatch(new ExpensesActions.Add(new Date(), this.moneyInput(), this.category.id))
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl('/');
+          this.snackbarService.show('Expense created.');
+        },
+        error: (message) => {
+          this.snackbarService.error(message);
+        },
+      });
   }
 }

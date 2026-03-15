@@ -77,6 +77,9 @@ export class EditCategoryDialog {
           this.snackbarService.show(`Changed '${oldCategory.name}' to '${newCategory.name}'.`);
           this.router.navigateByUrl('/');
         },
+        error: (message) => {
+          this.snackbarService.error(message);
+        },
       });
   }
 
@@ -105,6 +108,9 @@ export class EditCategoryDialog {
               : `Deleted ${this.category.name}`;
           this.snackbarService.show(message);
           this.router.navigateByUrl('/');
+        },
+        error: (message) => {
+          this.snackbarService.error(message);
         },
       });
   }

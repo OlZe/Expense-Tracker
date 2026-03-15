@@ -5,6 +5,12 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+.snackbar-error {
+  @include mat.snack-bar-overrides((
+    container-color: rgb(255, 195, 195)
+  ))
+}
+
 html {
   height: 100%;
   @include mat.theme(

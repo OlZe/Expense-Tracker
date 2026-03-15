@@ -14,13 +14,7 @@ import { CategoryActions } from '../../state/expenses/expenses.action';
 
 @Component({
   standalone: true,
-  imports: [
-    MatFormFieldModule,
-    FormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCheckboxModule,
-  ],
+  imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule, MatCheckboxModule],
   templateUrl: './new-category-page.html',
 })
 export class NewCategoryPage {
@@ -53,6 +47,9 @@ export class NewCategoryPage {
         next: () => {
           this.snackbarService.show(`Created '${this.newName}'`);
           this.router.navigateByUrl('/');
+        },
+        error: (message) => {
+          this.snackbarService.error(message);
         },
       });
   }
