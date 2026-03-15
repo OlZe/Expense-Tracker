@@ -4,6 +4,7 @@ import { Expense, ExpensesStateModel, ExpenseWithCategory } from './expenses.mod
 import { ExpensesActions } from './expenses.action';
 import { CategoriesStateModel, Category } from '../categories/categories.model';
 import { CategoriesState } from '../categories/categories.state';
+import { CategoryActions } from '../categories/categories.action';
 
 @State<ExpensesStateModel>({
   name: 'expenses',
@@ -123,6 +124,26 @@ export class ExpensesState {
 
     ctx.patchState({
       expenses: [...state.expenses.slice(0, index), ...state.expenses.slice(index + 1)],
+    });
+  }
+
+  @Action(CategoryActions.Delete)
+  deleteCategory(ctx: StateContext<ExpensesStateModel>, action: CategoryActions.Delete) {
+    const state = ctx.getState();
+
+    let newExpenses: Expense[];
+    if (action.deleteAllAssociatedExpenses) {
+      // Remove associated expenses
+      newExpenses = state.expenses.filter((e) => e.categoryId !== action.id);
+    } else {
+      // remove category-id on associated expenses
+      newExpenses = state.expenses.map((e) =>
+        e.categoryId === action.id ? { ...e, categoryId: undefined } : e,
+      );
+    }
+
+    ctx.patchState({
+      expenses: newExpenses,
     });
   }
 }

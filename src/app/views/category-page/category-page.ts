@@ -1,17 +1,18 @@
 import { Component, computed, inject, input, signal, Signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { CategoriesState } from '../../state/categories/categories.state';
 import { Category } from '../../state/categories/categories.model';
 import { MoneyInput } from '../../components/money-input/money-input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ExpensesActions } from '../../state/expenses/expenses.action';
+import { MatIconModule } from '@angular/material/icon';
+import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
   standalone: true,
   templateUrl: './category-page.html',
-  imports: [MoneyInput, MatButtonModule, MatSnackBarModule],
+  imports: [MoneyInput, MatButtonModule, MatIconModule, RouterLink],
 })
 export class CategoryPage {
   category!: Category;
@@ -21,7 +22,7 @@ export class CategoryPage {
   constructor(
     private store: Store,
     private router: Router,
-    private snackbar: MatSnackBar,
+    private snackbarService: SnackbarService,
     route: ActivatedRoute,
   ) {
     const id = route.snapshot.paramMap.get('id');
@@ -48,6 +49,6 @@ export class CategoryPage {
 
     this.store.dispatch(new ExpensesActions.Add(new Date(), this.moneyInput(), this.category.id));
     this.router.navigateByUrl('/');
-    this.snackbar.open('Expense created.', 'Close', { duration: 2500 });
+    this.snackbarService.show('Expense created.');
   }
 }

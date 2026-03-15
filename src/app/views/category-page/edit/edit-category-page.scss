@@ -1,0 +1,7 @@
+@use '@angular/material' as mat;
+
+.app-btn-delete {
+  @include mat.button-overrides((
+    filled-container-color: orange,
+  ));
+}
