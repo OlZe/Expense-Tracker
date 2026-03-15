@@ -25,6 +25,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 'latest'
+      - run: npm i -g @angular/cli@21.2.2
       - run: npm ci
       - run: ng build --base-href /Expense-Tracker/ --optimization
       - name: Upload artifact
