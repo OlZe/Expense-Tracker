@@ -5,12 +5,13 @@ import { CategoriesState } from '../../state/categories/categories.state';
 import { Category } from '../../state/categories/categories.model';
 import { MoneyInput } from '../../components/money-input/money-input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ExpensesActions } from '../../state/expenses/expenses.action';
 
 @Component({
   standalone: true,
   templateUrl: './category-page.html',
-  imports: [MoneyInput, MatButtonModule],
+  imports: [MoneyInput, MatButtonModule, MatSnackBarModule],
 })
 export class CategoryPage {
   category!: Category;
@@ -20,6 +21,7 @@ export class CategoryPage {
   constructor(
     private store: Store,
     private router: Router,
+    private snackbar: MatSnackBar,
     route: ActivatedRoute,
   ) {
     const id = route.snapshot.paramMap.get('id');
@@ -46,5 +48,6 @@ export class CategoryPage {
 
     this.store.dispatch(new ExpensesActions.Add(new Date(), this.moneyInput(), this.category.id));
     this.router.navigateByUrl('/');
+    this.snackbar.open('Expense created.', 'Close', { duration: 2500 });
   }
 }
