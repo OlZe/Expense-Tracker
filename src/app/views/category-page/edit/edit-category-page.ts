@@ -2,17 +2,17 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Category } from '../../../state/categories/categories.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { CategoriesState } from '../../../state/categories/categories.state';
 import { MatAnchor, MatButtonModule } from '@angular/material/button';
-import { CategoryActions } from '../../../state/categories/categories.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { SnackbarService } from '../../../services/snackbar.service';
 import { MatIconModule } from '@angular/material/icon';
+import { Category } from '../../../state/expenses/expenses.model';
+import { ExpensesState } from '../../../state/expenses/expenses.state';
+import { CategoryActions } from '../../../state/expenses/expenses.action';
 
 @Component({
   imports: [
@@ -45,7 +45,7 @@ export class EditCategoryDialog {
       router.navigateByUrl('/');
       return;
     }
-    const category = store.selectSnapshot(CategoriesState.getCategoryById(id));
+    const category = store.selectSnapshot(ExpensesState.getCategoryById(id));
     if (!category) {
       router.navigateByUrl('/');
       return;

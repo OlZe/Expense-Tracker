@@ -1,16 +1,14 @@
 import { Component, computed, inject, input, signal, Signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { CategoriesState } from '../../state/categories/categories.state';
-import { Category } from '../../state/categories/categories.model';
 import { MoneyInput } from '../../components/money-input/money-input';
 import { MatButtonModule } from '@angular/material/button';
 import { ExpensesActions } from '../../state/expenses/expenses.action';
 import { MatIconModule } from '@angular/material/icon';
 import { SnackbarService } from '../../services/snackbar.service';
-import { Expense, ExpenseWithCategory } from '../../state/expenses/expenses.model';
+import { Category, Expense, ExpenseWithCategory } from '../../state/expenses/expenses.model';
 import { ExpensesState } from '../../state/expenses/expenses.state';
-import { Expenses } from "../../components/expenses/expenses";
+import { Expenses } from '../../components/expenses/expenses';
 
 @Component({
   standalone: true,
@@ -34,7 +32,7 @@ export class CategoryPage {
       router.navigateByUrl('/');
       return;
     }
-    const category = store.selectSnapshot(CategoriesState.getCategoryById(id));
+    const category = store.selectSnapshot(ExpensesState.getCategoryById(id));
     if (!category) {
       router.navigateByUrl('/');
       return;

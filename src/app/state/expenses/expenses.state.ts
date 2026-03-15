@@ -1,122 +1,120 @@
 import { Injectable } from '@angular/core';
 import { Action, createSelector, Selector, State, StateContext } from '@ngxs/store';
-import { Expense, ExpensesStateModel, ExpenseWithCategory } from './expenses.model';
-import { ExpensesActions } from './expenses.action';
-import { CategoriesStateModel, Category } from '../categories/categories.model';
-import { CategoriesState } from '../categories/categories.state';
-import { CategoryActions } from '../categories/categories.action';
+import { Category, Expense, ExpensesStateModel, ExpenseWithCategory } from './expenses.model';
+import { CategoryActions, ExpensesActions } from './expenses.action';
 
 @State<ExpensesStateModel>({
   name: 'expenses',
   defaults: {
-    expenses: [
-      {
+    expenses: {
+      'default-1': {
         id: 'default-1',
         categoryId: 'default-transport',
         datetime: new Date(),
         price: 2.75,
       },
-      {
+      'default-2': {
         id: 'default-2',
         categoryId: 'default-transport',
         datetime: new Date(),
         price: 2.75,
       },
-      {
+      'default-3': {
         id: 'default-3',
         categoryId: 'default-food',
         datetime: new Date(),
         price: 7.9,
       },
-    ],
+    },
+    categories: {
+      'default-transport': {
+        id: 'default-transport',
+        name: '🚗 Transport',
+      },
+      'default-health': {
+        id: 'default-health',
+        name: '❤️‍🩹 Health',
+      },
+      'default-food': {
+        id: 'default-food',
+        name: '🍽️ Food & Drinks',
+      },
+    },
   },
 })
 @Injectable()
 export class ExpensesState {
   @Selector()
-  static getExpenses(state: ExpensesStateModel) {
-    return state.expenses;
-  }
-
-  static getExpenseById(id: string) {
-    return createSelector([ExpensesState], (state: ExpensesStateModel) => {
-      return state.expenses.find((c) => c.id === id);
-    });
-  }
-
-  @Selector([ExpensesState, CategoriesState])
-  static getExpensesWithCategory(
-    expensesState: ExpensesStateModel,
-    categoriesState: CategoriesStateModel,
-  ) {
-    // convert categories array to a lookup
-    const categoriesById: Record<string, Category> = {};
-    categoriesState.categories.forEach((cat) => {
-      categoriesById[cat.id] = cat;
-    });
-
-    return expensesState.expenses.map(
+  static getExpensesWithCategory(state: ExpensesStateModel) {
+    console.log(state);
+    return Object.values(state.expenses).map(
       (expense) =>
         ({
           ...expense,
-          category: expense.categoryId ? categoriesById[expense.categoryId] : undefined,
+          category: expense.categoryId ? state.categories[expense.categoryId] : null,
         }) as ExpenseWithCategory,
     );
   }
 
-  static getExpenseWithCategoryById(id: string) {
-    return createSelector(
-      [ExpensesState, CategoriesState],
-      (expensesState: ExpensesStateModel, categoriesState: CategoriesStateModel) => {
-        const expense = expensesState.expenses.find((e) => e.id === id);
-        if (!expense) return undefined;
-        const category = expense.categoryId
-          ? categoriesState.categories.find((c) => c.id === expense.categoryId)
-          : undefined;
-        return {
-          ...expense,
-          category: category,
-        } as ExpenseWithCategory;
-      },
-    );
+  @Selector()
+  static getCategories(state: ExpensesStateModel) {
+    return Object.values(state.categories);
+  }
+
+  static getCategoryById(id: string) {
+    return createSelector([ExpensesState], (state: ExpensesStateModel) => {
+      return state.categories[id];
+    });
   }
 
   @Selector()
   static getCategorylessExpenses(state: ExpensesStateModel) {
-    return state.expenses.filter((e) => !e.categoryId);
+    return Object.values(state.expenses).filter((e) => !e.categoryId);
   }
 
   @Action(ExpensesActions.Add)
   addExpense(ctx: StateContext<ExpensesStateModel>, action: ExpensesActions.Add) {
     const state = ctx.getState();
 
+    const categoryExists = action.categoryId && action.categoryId in state.categories;
+    if (!categoryExists) {
+      throw new Error(
+        `Couldn't create expense, because category id ${action.categoryId} doesn't exist.`,
+      );
+    }
+
     ctx.patchState({
-      expenses: [
+      expenses: {
         ...state.expenses,
-        {
-          id: crypto.randomUUID(),
-          ...action,
+        [action.id]: {
+          id: action.id,
+          price: action.price,
+          categoryId: action.categoryId,
+          datetime: action.datetime,
         },
-      ],
+      },
     });
   }
 
   @Action(ExpensesActions.Edit)
-  editExpenses(ctx: StateContext<ExpensesStateModel>, action: ExpensesActions.Edit) {
+  editExpense(ctx: StateContext<ExpensesStateModel>, action: ExpensesActions.Edit) {
     const state = ctx.getState();
 
-    const index = state.expenses.findIndex((c) => c.id === action.expense.id);
-    if (index < 0) throw new Error(`Expense ${action.expense.id} doesn't exist.`);
+    if (!(action.expense.id in state.expenses)) {
+      throw new Error(`Couldn't edit expense, because id ${action.expense.id} doesn't exist.`);
+    }
+
+    if (action.expense.categoryId && !(action.expense.categoryId in state.categories)) {
+      throw new Error(
+        `Couldn't edit expense, because category ${action.expense.categoryId} doesn't exist`,
+      );
+    }
 
     ctx.patchState({
-      expenses: [
-        ...state.expenses.slice(0, index),
-        {
-          ...state.expenses[index],
-          ...action.expense,
-        },
-        ...state.expenses.slice(index + 1),
-      ],
+      expenses: {
+        ...state.expenses,
+        [action.expense.id]: action.expense,
+      },
     });
   }
 
@@ -124,11 +122,10 @@ export class ExpensesState {
   deleteExpense(ctx: StateContext<ExpensesStateModel>, action: ExpensesActions.Delete) {
     const state = ctx.getState();
 
-    const index = state.expenses.findIndex((c) => c.id === action.id);
-    if (index < 0) throw new Error(`Expense ${action.id} doesn't exist.`);
+    const { [action.id]: removed, ...newExpenses } = state.expenses;
 
     ctx.patchState({
-      expenses: [...state.expenses.slice(0, index), ...state.expenses.slice(index + 1)],
+      expenses: newExpenses,
     });
   }
 
@@ -136,34 +133,79 @@ export class ExpensesState {
   deleteCategory(ctx: StateContext<ExpensesStateModel>, action: CategoryActions.Delete) {
     const state = ctx.getState();
 
-    let newExpenses: Expense[];
-    if (action.deleteAllAssociatedExpenses) {
-      // Remove associated expenses
-      newExpenses = state.expenses.filter((e) => e.categoryId !== action.id);
-    } else {
-      // remove category-id on associated expenses
-      newExpenses = state.expenses.map((e) =>
-        e.categoryId === action.id ? { ...e, categoryId: undefined } : e,
-      );
-    }
+    if (!(action.id in state.categories)) throw new Error(`Category ${action.id} doesn't exist.`);
+
+    const { [action.id]: removed, ...newCategories } = state.categories;
+
+    const newExpenses: Record<string, Expense> = action.deleteAllAssociatedExpenses
+      ? Object.fromEntries(
+          Object.entries(state.expenses).filter(([_, e]) => e.categoryId !== action.id),
+        )
+      : Object.fromEntries(
+          Object.entries(state.expenses).map(([_, e]) => [
+            e.id,
+            e.categoryId === action.id ? { ...e, categoryId: undefined } : e,
+          ]),
+        );
 
     ctx.patchState({
+      categories: newCategories,
       expenses: newExpenses,
     });
   }
 
   @Action(CategoryActions.Add)
   addCategory(ctx: StateContext<ExpensesStateModel>, action: CategoryActions.Add) {
-    if (action.assignCategorylessExpensesToThis) {
-      const state = ctx.getState();
+    const state = ctx.getState();
 
-      const newExpenses = state.expenses.map((e) =>
-        e.categoryId ? e : { ...e, categoryId: action.id },
+    const nameIsDuplicate = Object.values(state.categories).some((c) => c.name === action.name);
+    if (nameIsDuplicate) throw new Error(`A category with the name ${action.name} already exists.`);
+
+    const newCategores = {
+      ...state.categories,
+      [action.id]: {
+        id: action.id,
+        name: action.name,
+      } as Category,
+    };
+
+    let newExpenses = state.expenses;
+    if (action.assignCategorylessExpensesToThis) {
+      newExpenses = Object.fromEntries(
+        Object.entries(state.expenses).map(([_, e]) => [
+          e.id,
+          e.categoryId ? e : { ...e, categoryId: action.id },
+        ]),
+      );
+    }
+
+    ctx.patchState({
+      categories: newCategores,
+      expenses: newExpenses,
+    });
+  }
+
+  @Action(CategoryActions.Edit)
+  editCategory(ctx: StateContext<ExpensesStateModel>, action: CategoryActions.Edit) {
+    const state = ctx.getState();
+
+    if (!(action.category.id in state.categories)) {
+      throw new Error(`Couldn't edit category, because id ${action.category.id} doesn't exist.`);
+    }
+
+    const nameIsDuplicate = Object.values(state.categories).some(
+      (c) => c.name === action.category.name,
+    );
+    if (nameIsDuplicate)
+      throw new Error(
+        `Couldn't edit category, because another category with the name ${action.category.name} already exists.`,
       );
 
-      ctx.patchState({
-        expenses: newExpenses,
-      });
-    }
+    ctx.patchState({
+      categories: {
+        ...state.categories,
+        [action.category.id]: action.category,
+      },
+    });
   }
 }

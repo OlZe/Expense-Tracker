@@ -1,5 +1,3 @@
-import { Category } from "../categories/categories.model";
-
 export interface Expense {
   id: string;
   categoryId?: string;
@@ -7,8 +5,14 @@ export interface Expense {
   price: number;
 }
 
-export type ExpenseWithCategory = Expense & { category?: Category }
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export type ExpenseWithCategory = Expense & { category: Category | null };
 
 export interface ExpensesStateModel {
-  expenses: Expense[];
+  expenses: Record<string, Expense>;
+  categories: Record<string, Category>;
 }

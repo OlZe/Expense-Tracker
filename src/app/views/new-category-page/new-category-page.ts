@@ -2,7 +2,6 @@ import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Store } from '@ngxs/store';
-import { CategoryActions } from '../../state/categories/categories.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../services/snackbar.service';
@@ -11,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ExpensesState } from '../../state/expenses/expenses.state';
 import { JsonPipe } from '@angular/common';
+import { CategoryActions } from '../../state/expenses/expenses.action';
 
 @Component({
   standalone: true,
