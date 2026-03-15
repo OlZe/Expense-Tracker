@@ -30,8 +30,12 @@ export class MoneyInput {
 
   constructor() {
     effect(() => {
-      this.inputValue = this.initValue().toString();
-      this.parseAndFormatInput();
+      if (this.initValue() > 0) {
+        this.inputValue = this.initValue().toString();
+        this.parseAndFormatInput();
+      } else {
+        this.inputValue = '';
+      }
     })
   }
 
