@@ -1,5 +1,13 @@
-import { Component, effect, input, Input, output, signal } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  effect,
+  ElementRef,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 type DigitDisplayElement = {
   text: string;
@@ -12,9 +20,11 @@ type DigitDisplayElement = {
   imports: [FormsModule],
   standalone: true,
 })
-export class MoneyInput {
+export class MoneyInput implements AfterViewInit {
+  autofocus = input<boolean>(false);
   initValue = input<number>(0);
   inputValue: string = '';
+  inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
   formattedValue = {
     euros: { text: '0', format: 'placeholder' } as DigitDisplayElement,
     cents: [{ kind: 'string', text: '00', format: 'placeholder' } as DigitDisplayElement],
@@ -36,7 +46,13 @@ export class MoneyInput {
       } else {
         this.inputValue = '';
       }
-    })
+    });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.autofocus()) {
+      this.inputElement().nativeElement.focus();
+    }
   }
 
   parseAndFormatInput() {
