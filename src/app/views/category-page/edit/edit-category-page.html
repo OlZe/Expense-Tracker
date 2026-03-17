@@ -27,7 +27,7 @@
 
 <form class="mt-5 flex flex-col flex-nowrap items-start">
   @if (deleteView.kind === 'with expenses') {
-    <p>
+    <p class="text-gray-500">
       ⚠️ This category has recorded expenses associated with it. How would you like to handle them?
     </p>
     <mat-radio-group
@@ -44,7 +44,7 @@
       </mat-radio-button>
     </mat-radio-group>
   } @else if (deleteView.kind === 'without expenses') {
-    <p>This category has no recorded expenses.</p>
+    <p class="text-gray-500">This category has no recorded expenses.</p>
     <mat-checkbox [(ngModel)]="deleteView.confirmed" name="deleteView.confirmed" class="mt-5"
       >Yes, really delete</mat-checkbox
     >
