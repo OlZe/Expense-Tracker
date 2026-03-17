@@ -30,7 +30,8 @@ export class MoneyInput implements OnInit, AfterViewInit {
     euros: { text: '0', format: 'placeholder' } as DigitDisplayElement,
     cents: [{ kind: 'string', text: '00', format: 'placeholder' } as DigitDisplayElement],
   };
-  isDecimalPointTyped = false;
+  hasEnteredDecimalPoint = false;
+  highlightCurrencySymbol = false;
 
   inputNumber = output<number>();
 
@@ -54,14 +55,15 @@ export class MoneyInput implements OnInit, AfterViewInit {
 
   parseAndFormatInput() {
     let inputNum = 0;
+    this.highlightCurrencySymbol = false;
 
     let cleanedInput = this.inputValue.replaceAll(',', '.');
     cleanedInput = cleanedInput.replace(/[^\d.]/g, '');
 
     const decimalIndex = cleanedInput.indexOf('.');
-    this.isDecimalPointTyped = decimalIndex >= 0;
+    this.hasEnteredDecimalPoint = decimalIndex >= 0;
 
-    const euroInput = cleanedInput.slice(0, this.isDecimalPointTyped ? decimalIndex : undefined);
+    const euroInput = cleanedInput.slice(0, this.hasEnteredDecimalPoint ? decimalIndex : undefined);
 
     if (!euroInput) {
       this.formattedValue.euros = { text: '0', format: 'placeholder' };
@@ -75,7 +77,7 @@ export class MoneyInput implements OnInit, AfterViewInit {
       };
     }
 
-    let centInput = this.isDecimalPointTyped ? cleanedInput.slice(decimalIndex + 1) : undefined;
+    let centInput = this.hasEnteredDecimalPoint ? cleanedInput.slice(decimalIndex + 1) : undefined;
     centInput = centInput?.replaceAll('.', ''); // Ignore duplicate decimals so only digits remain
     if (!centInput || centInput.length == 0) {
       this.formattedValue.cents = [{ text: '00', format: 'placeholder' }];
@@ -89,6 +91,7 @@ export class MoneyInput implements OnInit, AfterViewInit {
       centInput = centInput.slice(0, 2);
       this.formattedValue.cents = [{ text: centInput, format: 'entered' }];
       inputNum += Number.parseInt(centInput) / 100;
+      this.highlightCurrencySymbol = true;
     }
 
     this.inputNumber.emit(inputNum);

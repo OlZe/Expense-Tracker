@@ -9,7 +9,7 @@
     >
 
     <!-- decimal point -->
-    <span class="text-5xl" [class.text-gray-600]="!isDecimalPointTyped">,</span>
+    <span class="text-5xl" [class.text-gray-600]="!hasEnteredDecimalPoint">,</span>
 
     <!-- cents -->
     @for (centElement of formattedValue.cents; track $index) {
@@ -19,7 +19,7 @@
     }
 
     <!-- currency symbol -->
-    <span class="text-gray-600 text-3xl">€</span>
+    <span class="text-3xl" [class.text-gray-600]="!highlightCurrencySymbol">€</span>
   </div>
 
   <!-- Hidden input -->
