@@ -1,26 +1,24 @@
-<div style="view-transition-name: slide-view-over">
-  <div class="flex flex-row flex-wrap justify-between">
-    <h1 class="text-3xl">See expense</h1>
-    <a matIconButton routerLink="edit">
-      <mat-icon>edit</mat-icon>
-    </a>
-  </div>
-
-  <div
-    class="px-3 py-2 text-center flex flex-row flex-nowrap justify-center align-top tracking-wider mt-6"
-  >
-    <span class="text-5xl"> {{ euros }},</span>
-    <span class="text-3xl"> {{ cents }} €</span>
-  </div>
-  <p class="mt-6">{{ date }}</p>
-
-  @if (expense.category) {
-    <p class="mt-6">
-      for <a [routerLink]="['/category', expense.category.id]">{{ expense.category.name }}</a>
-    </p>
-  } @else {
-    <p class="mt-6">
-      ⚠️ This expense is uncategorized.<br />Give it a category by opening the editing menu.
-    </p>
-  }
+<div class="flex flex-row flex-wrap justify-between">
+  <h1 class="text-3xl">See expense</h1>
+  <a matIconButton routerLink="edit">
+    <mat-icon>edit</mat-icon>
+  </a>
 </div>
+
+<div
+  class="px-3 py-2 text-center flex flex-row flex-nowrap justify-center align-top tracking-wider mt-6"
+>
+  <span class="text-5xl"> {{ euros }},</span>
+  <span class="text-3xl"> {{ cents }} €</span>
+</div>
+<p class="mt-6">{{ date }}</p>
+
+@if (expense.category) {
+  <p class="mt-6">
+    for <a [routerLink]="['/category', expense.category.id]">{{ expense.category.name }}</a>
+  </p>
+} @else {
+  <p class="mt-6">
+    ⚠️ This expense is uncategorized.<br />Give it a category by opening the editing menu.
+  </p>
+}

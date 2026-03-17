@@ -1,25 +1,23 @@
-<div style="view-transition-name: slide-view-over">
-  <h1 class="text-3xl">New category</h1>
+<h1 class="text-3xl">New category</h1>
 
-  <form class="mt-5">
-    <mat-form-field class="w-full">
-      <mat-label>Name</mat-label>
-      <input matInput [(ngModel)]="newName" name="newName" />
-    </mat-form-field>
+<form class="mt-5">
+  <mat-form-field class="w-full">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="newName" name="newName" />
+  </mat-form-field>
 
-    @if (showAssignCategorylessExpensesCheckbox()) {
-      <mat-checkbox [(ngModel)]="assignCategorylessExpenses" name="assignCategorylessExpenses"
-        >Assign all categoryless expenses to this.</mat-checkbox
-      >
-    }
-
-    <button
-      matButton="filled"
-      [disabled]="isCreateButtonDisabled()"
-      (click)="createCategory()"
-      class="mt-3"
+  @if (showAssignCategorylessExpensesCheckbox()) {
+    <mat-checkbox [(ngModel)]="assignCategorylessExpenses" name="assignCategorylessExpenses"
+      >Assign all categoryless expenses to this.</mat-checkbox
     >
-      Save
-    </button>
-  </form>
-</div>
+  }
+
+  <button
+    matButton="filled"
+    [disabled]="isCreateButtonDisabled()"
+    (click)="createCategory()"
+    class="mt-3"
+  >
+    Save
+  </button>
+</form>

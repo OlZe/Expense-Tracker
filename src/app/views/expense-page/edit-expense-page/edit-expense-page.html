@@ -1,61 +1,59 @@
-<div style="view-transition-name: slide-view-over">
-  <form class="flex flex-col flex-nowrap gap-11" #form="ngForm">
-    <h1 class="text-3xl">Edit expense</h1>
+<form class="flex flex-col flex-nowrap gap-11" #form="ngForm">
+  <h1 class="text-3xl">Edit expense</h1>
 
-    <money-input [initValue]="expense.price" (inputNumber)="changePrice($event)"></money-input>
+  <money-input [initValue]="expense.price" (inputNumber)="changePrice($event)"></money-input>
 
+  <mat-form-field>
+    <mat-label>Date</mat-label>
+    <input matInput [matDatepicker]="daypicker" [(ngModel)]="datetime" name="date" required />
+    <mat-datepicker #daypicker></mat-datepicker>
+    <mat-datepicker-toggle [for]="daypicker" matSuffix></mat-datepicker-toggle>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Time</mat-label>
+    <input
+      matInput
+      [matTimepicker]="timepicker"
+      [(ngModel)]="datetime"
+      [ngModelOptions]="{ updateOn: 'blur' }"
+      name="time"
+      required
+    />
+    <mat-timepicker #timepicker />
+    <mat-timepicker-toggle [for]="timepicker" matSuffix />
+  </mat-form-field>
+
+  @if (allCategories.length > 0) {
     <mat-form-field>
-      <mat-label>Date</mat-label>
-      <input matInput [matDatepicker]="daypicker" [(ngModel)]="datetime" name="date" required />
-      <mat-datepicker #daypicker></mat-datepicker>
-      <mat-datepicker-toggle [for]="daypicker" matSuffix></mat-datepicker-toggle>
+      <mat-label>Category</mat-label>
+      <mat-select [(value)]="expense.categoryId">
+        <mat-option>None</mat-option>
+        @for (category of allCategories; track category.id) {
+          <mat-option [value]="category.id">{{ category.name }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
+  } @else {
+    <p>⚠️ You have no categories.<br />Go back to the home screen to create a category.</p>
+  }
 
-    <mat-form-field>
-      <mat-label>Time</mat-label>
-      <input
-        matInput
-        [matTimepicker]="timepicker"
-        [(ngModel)]="datetime"
-        [ngModelOptions]="{ updateOn: 'blur' }"
-        name="time"
-        required
-      />
-      <mat-timepicker #timepicker />
-      <mat-timepicker-toggle [for]="timepicker" matSuffix />
-    </mat-form-field>
+  <button matButton="filled" (click)="saveExpense()" [disabled]="form.invalid">Save</button>
+</form>
 
-    @if (allCategories.length > 0) {
-      <mat-form-field>
-        <mat-label>Category</mat-label>
-        <mat-select [(value)]="expense.categoryId">
-          <mat-option>None</mat-option>
-          @for (category of allCategories; track category.id) {
-            <mat-option [value]="category.id">{{ category.name }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    } @else {
-      <p>⚠️ You have no categories.<br />Go back to the home screen to create a category.</p>
-    }
+<form class="mt-5 flex flex-col flex-nowrap items-start">
+  <h2 class="text-2xl mt-11">Delete</h2>
 
-    <button matButton="filled" (click)="saveExpense()" [disabled]="form.invalid">Save</button>
-  </form>
+  <mat-checkbox [(ngModel)]="deleteConfirmed" name="deleteConfirmed" class="mt-5"
+    >Yes, really delete</mat-checkbox
+  >
 
-  <form class="mt-5 flex flex-col flex-nowrap items-start">
-    <h2 class="text-2xl mt-11">Delete</h2>
-
-    <mat-checkbox [(ngModel)]="deleteConfirmed" name="deleteConfirmed" class="mt-5"
-      >Yes, really delete</mat-checkbox
-    >
-
-    <button
-      matButton="filled"
-      [disabled]="!deleteConfirmed"
-      (click)="deleteExpense()"
-      class="app-btn-delete mt-5"
-    >
-      <mat-icon>delete</mat-icon>Delete
-    </button>
-  </form>
-</div>
+  <button
+    matButton="filled"
+    [disabled]="!deleteConfirmed"
+    (click)="deleteExpense()"
+    class="app-btn-delete mt-5"
+  >
+    <mat-icon>delete</mat-icon>Delete
+  </button>
+</form>

@@ -18,7 +18,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withViewTransitions(), withHashLocation()),
+    provideRouter(routes, withHashLocation()),
     provideStore(
       [ExpensesState],
       withNgxsStoragePlugin({ keys: '*' }),
