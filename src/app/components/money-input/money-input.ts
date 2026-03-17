@@ -4,6 +4,7 @@ import {
   effect,
   ElementRef,
   input,
+  OnInit,
   output,
   viewChild,
 } from '@angular/core';
@@ -20,7 +21,7 @@ type DigitDisplayElement = {
   imports: [FormsModule],
   standalone: true,
 })
-export class MoneyInput implements AfterViewInit {
+export class MoneyInput implements OnInit, AfterViewInit {
   autofocus = input<boolean>(false);
   initValue = input<number>(0);
   inputValue: string = '';
@@ -38,15 +39,11 @@ export class MoneyInput implements AfterViewInit {
     maximumFractionDigits: 0,
   });
 
-  constructor() {
-    effect(() => {
-      if (this.initValue() > 0) {
-        this.inputValue = this.initValue().toString();
-        this.parseAndFormatInput();
-      } else {
-        this.inputValue = '';
-      }
-    });
+  ngOnInit() {
+    if (this.initValue() > 0) {
+      this.inputValue = this.initValue().toFixed(2);
+      this.parseAndFormatInput();
+    }
   }
 
   ngAfterViewInit(): void {
