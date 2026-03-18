@@ -3,7 +3,7 @@
 <form class="mt-5 flex flex-col">
   <mat-form-field class="w-full">
     <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="newName" name="newName" autofocus />
+    <input matInput [(ngModel)]="newName" name="newName" #input />
   </mat-form-field>
 
   @if (showAssignCategorylessExpensesCheckbox()) {

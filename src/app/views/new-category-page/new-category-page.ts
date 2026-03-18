@@ -1,4 +1,12 @@
-import { Component, computed, DestroyRef, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Store } from '@ngxs/store';
@@ -17,9 +25,10 @@ import { CategoryActions } from '../../state/expenses/expenses.action';
   imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule, MatCheckboxModule],
   templateUrl: './new-category-page.html',
 })
-export class NewCategoryPage {
+export class NewCategoryPage implements AfterViewInit {
   newName: string = '';
   assignCategorylessExpenses = false;
+  inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
   private store = inject(Store);
   categorylessExpenses = this.store.selectSignal(ExpensesState.getCategorylessExpenses);
   showAssignCategorylessExpensesCheckbox = computed(
@@ -31,6 +40,10 @@ export class NewCategoryPage {
     private router: Router,
     private snackbarService: SnackbarService,
   ) {}
+
+  ngAfterViewInit(): void {
+    this.inputElement().nativeElement.focus();
+  }
 
   isCreateButtonDisabled(): boolean {
     return !this.newName;
