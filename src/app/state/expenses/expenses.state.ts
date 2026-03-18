@@ -40,6 +40,7 @@ import { CategoryActions, ExpensesActions } from './expenses.action';
         name: '🍽️ Food & Drinks',
       },
     },
+    categoriesOrder: ['default-transport', 'default-health', 'default-food'],
   },
 })
 @Injectable()
@@ -71,7 +72,7 @@ export class ExpensesState {
 
   @Selector()
   static getCategories(state: ExpensesStateModel) {
-    return Object.values(state.categories);
+    return state.categoriesOrder.map((id) => state.categories[id]);
   }
 
   static getCategoryById(id: string) {
@@ -146,10 +147,24 @@ export class ExpensesState {
   deleteCategory(ctx: StateContext<ExpensesStateModel>, action: CategoryActions.Delete) {
     const state = ctx.getState();
 
+    // Remove category
     if (!(action.id in state.categories)) throw new Error(`Category ${action.id} doesn't exist.`);
 
     const { [action.id]: removed, ...newCategories } = state.categories;
 
+    // Remove in categoriesOrder
+    const orderIndex = state.categoriesOrder.indexOf(action.id);
+    if (orderIndex < 0) {
+      throw new Error(
+        `Inconsistent state: Category ${action.id} exists, but is not listed in order data`,
+      );
+    }
+    const newCategoriesOrder = [
+      ...state.categoriesOrder.slice(0, orderIndex),
+      ...state.categoriesOrder.slice(orderIndex + 1),
+    ];
+
+    // Update expenses
     const newExpenses: Record<string, Expense> = action.deleteAllAssociatedExpenses
       ? Object.fromEntries(
           Object.entries(state.expenses).filter(([_, e]) => e.categoryId !== action.id),
@@ -161,9 +176,11 @@ export class ExpensesState {
           ]),
         );
 
+    // Save
     ctx.patchState({
       categories: newCategories,
       expenses: newExpenses,
+      categoriesOrder: newCategoriesOrder,
     });
   }
 
@@ -174,7 +191,7 @@ export class ExpensesState {
     const nameIsDuplicate = Object.values(state.categories).some((c) => c.name === action.name);
     if (nameIsDuplicate) throw new Error(`A category with the name ${action.name} already exists.`);
 
-    const newCategores = {
+    const newCategories = {
       ...state.categories,
       [action.id]: {
         id: action.id,
@@ -193,8 +210,9 @@ export class ExpensesState {
     }
 
     ctx.patchState({
-      categories: newCategores,
+      categories: newCategories,
       expenses: newExpenses,
+      categoriesOrder: [...state.categoriesOrder, action.id],
     });
   }
 
@@ -220,5 +238,30 @@ export class ExpensesState {
         [action.category.id]: action.category,
       },
     });
+  }
+
+  @Action(CategoryActions.Reorder)
+  reorderCategories(ctx: StateContext<ExpensesStateModel>, action: CategoryActions.Reorder) {
+    const state = ctx.getState();
+
+    // Verify that both sets of ids (new order and existing category objects) are identical
+    const idsAreValid =
+      action.ids.length === Object.keys(state.categories).length &&
+      action.ids.every((id) => id in state.categories);
+
+    if (!idsAreValid) {
+      throw new Error(
+        `Passed order of category ids doesn't match the existing category ids in the state. Some ids are either missing or don't exist`,
+      );
+    }
+
+    ctx.patchState({
+      categoriesOrder: action.ids,
+    });
+  }
+
+  @Action(ExpensesActions.DeleteAllData)
+  deleteAllData(ctx: StateContext<ExpensesStateModel>, action: ExpensesActions.DeleteAllData) {
+    ctx.setState({ expenses: {}, categories: {}, categoriesOrder: [] });
   }
 }

@@ -22,6 +22,11 @@ export namespace ExpensesActions {
     static readonly type = `${ACTION_SCOPE} Delete expense`;
     constructor(public id: string) {}
   }
+
+  export class DeleteAllData {
+    static readonly type = `${ACTION_SCOPE} Delete all data`;
+    constructor() {}
+  }
 }
 
 export namespace CategoryActions {
@@ -46,5 +51,10 @@ export namespace CategoryActions {
       public id: string,
       public deleteAllAssociatedExpenses: boolean,
     ) {}
+  }
+
+  export class Reorder {
+    static readonly type = `${ACTION_SCOPE} Reorder categories`;
+    constructor(public ids: string[]) {}
   }
 }

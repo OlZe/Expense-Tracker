@@ -1,8 +1,11 @@
-<div class="flex flex-col flex-nowrap gap-y-5">
-  <graph></graph>
-  <category-cards></category-cards>
-  <expenses
-    [expenses]="allExpenses()"
-    [emptyMessage]="'You don\'t have any expenses tracked yet.\nStart by tapping a category.'"
-  ></expenses>
+<div class="flex flex-row flex-wrap justify-between items-baseline">
+  <h1 class="text-3xl">My Expenses</h1>
+  <a [routerLink]="'settings'"><mat-icon>settings</mat-icon></a>
 </div>
+<!-- <graph></graph> -->
+<category-cards class="block mt-10"></category-cards>
+<expenses
+  class="block mt-10"
+  [expenses]="allExpenses()"
+  [emptyMessage]="'You don\'t have any expenses tracked yet.\nStart by tapping a category.'"
+></expenses>

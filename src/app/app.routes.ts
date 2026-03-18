@@ -5,6 +5,7 @@ import { EditCategoryDialog as EditCategoryPage } from './views/category-page/ed
 import { NewCategoryPage } from './views/new-category-page/new-category-page';
 import { ExpensePage } from './views/expense-page/expense-page';
 import { EditExpensePage } from './views/expense-page/edit-expense-page/edit-expense-page';
+import { SettingsPage } from './views/settings-page/settings-page';
 
 export const routes: Routes = [
   { path: 'category/new', component: NewCategoryPage },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'category/:id/edit', component: EditCategoryPage },
   { path: 'expense/:id', component: ExpensePage },
   { path: 'expense/:id/edit', component: EditExpensePage },
+  { path: 'settings', component: SettingsPage },
   { path: '', pathMatch: 'full', component: HomePage },
   { path: '**', redirectTo: '' },
 ];

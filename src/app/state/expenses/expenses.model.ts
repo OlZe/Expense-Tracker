@@ -15,4 +15,5 @@ export type ExpenseWithCategory = Expense & { category: Category | null };
 export interface ExpensesStateModel {
   expenses: Record<string, Expense>;
   categories: Record<string, Category>;
+  categoriesOrder: string[];
 }
