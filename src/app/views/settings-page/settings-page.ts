@@ -19,6 +19,7 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { MatIcon } from '@angular/material/icon';
+import { NavigateBackButton } from "../../components/navigate-back-button/navigate-back-button";
 
 @Component({
   standalone: true,
@@ -32,7 +33,8 @@ import { MatIcon } from '@angular/material/icon';
     CdkDragHandle,
     CdkDragPlaceholder,
     CdkDragPreview,
-  ],
+    NavigateBackButton
+],
   templateUrl: './settings-page.html',
 })
 export class SettingsPage {

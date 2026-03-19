@@ -1,7 +1,10 @@
-<form class="flex flex-col flex-nowrap gap-11" #form="ngForm">
+<div class="flex flex-row items-end">
+  <navigate-back-button></navigate-back-button>
   <h1 class="text-3xl">Edit expense</h1>
+</div>
 
-  <money-input [initValue]="expense.price" (inputNumber)="changePrice($event)"></money-input>
+<form class="flex flex-col flex-nowrap gap-11" #form="ngForm">
+  <money-input class="mt-6" [initValue]="expense.price" (inputNumber)="changePrice($event)"></money-input>
 
   <mat-form-field>
     <mat-label>Date</mat-label>

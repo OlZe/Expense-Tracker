@@ -14,6 +14,7 @@ import { Category } from '../../../state/expenses/expenses.model';
 import { ExpensesState } from '../../../state/expenses/expenses.state';
 import { CategoryActions } from '../../../state/expenses/expenses.action';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NavigateBackButton } from "../../../components/navigate-back-button/navigate-back-button";
 
 type DeleteView =
   | {
@@ -35,7 +36,8 @@ type DeleteView =
     MatRadioModule,
     MatIconModule,
     MatCheckboxModule,
-  ],
+    NavigateBackButton
+],
   templateUrl: './edit-category-page.html',
   standalone: true,
 })

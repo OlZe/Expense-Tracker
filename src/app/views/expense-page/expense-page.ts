@@ -6,9 +6,10 @@ import { SnackbarService } from '../../services/snackbar.service';
 import { ExpensesState } from '../../state/expenses/expenses.state';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { NavigateBackButton } from "../../components/navigate-back-button/navigate-back-button";
 
 @Component({
-  imports: [RouterLink, MatIconModule],
+  imports: [RouterLink, MatIconModule, NavigateBackButton],
   standalone: true,
   templateUrl: './expense-page.html',
 })

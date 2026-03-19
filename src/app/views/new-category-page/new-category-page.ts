@@ -19,10 +19,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ExpensesState } from '../../state/expenses/expenses.state';
 import { JsonPipe } from '@angular/common';
 import { CategoryActions } from '../../state/expenses/expenses.action';
+import { NavigateBackButton } from "../../components/navigate-back-button/navigate-back-button";
 
 @Component({
   standalone: true,
-  imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule, MatCheckboxModule],
+  imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule, MatCheckboxModule, NavigateBackButton],
   templateUrl: './new-category-page.html',
 })
 export class NewCategoryPage implements AfterViewInit {

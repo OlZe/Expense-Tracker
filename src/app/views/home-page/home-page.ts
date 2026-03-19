@@ -6,11 +6,12 @@ import { Store } from '@ngxs/store';
 import { ExpensesState } from '../../state/expenses/expenses.state';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { NavigateBackButton } from "../../components/navigate-back-button/navigate-back-button";
 
 @Component({
   standalone: true,
   templateUrl: './home-page.html',
-  imports: [CategoryCards, Expenses, MatIcon, RouterLink],
+  imports: [CategoryCards, Expenses, MatIcon, RouterLink, NavigateBackButton],
 })
 export class HomePage {
   allExpenses = inject(Store).selectSignal(ExpensesState.getExpensesWithCategory);

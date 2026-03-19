@@ -1,6 +1,9 @@
-<div class="flex flex-row flex-wrap justify-between">
-  <h1 class="text-3xl">{{ category.name }}</h1>
-  <a matIconButton routerLink="edit">
+<div class="flex flex-row flex-wrap justify-between items-end">
+  <div class="flex flex-row items-end">
+    <navigate-back-button></navigate-back-button>
+    <h1 class="text-3xl">{{ category.name }}</h1>
+  </div>
+  <a routerLink="edit">
     <mat-icon>edit</mat-icon>
   </a>
 </div>

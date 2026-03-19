@@ -17,6 +17,7 @@ import { ExpensesActions } from '../../../state/expenses/expenses.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NavigateBackButton } from "../../../components/navigate-back-button/navigate-back-button";
 
 @Component({
   standalone: true,
@@ -31,7 +32,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatButtonModule,
     MatIconModule,
     MatCheckboxModule,
-  ],
+    NavigateBackButton
+],
   templateUrl: './edit-expense-page.html',
 })
 export class EditExpensePage {

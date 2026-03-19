@@ -11,11 +11,12 @@ import { ExpensesState } from '../../state/expenses/expenses.state';
 import { Expenses } from '../../components/expenses/expenses';
 import { takeUntil } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigateBackButton } from "../../components/navigate-back-button/navigate-back-button";
 
 @Component({
   standalone: true,
   templateUrl: './category-page.html',
-  imports: [MoneyInput, MatButtonModule, MatIconModule, RouterLink, Expenses],
+  imports: [MoneyInput, MatButtonModule, MatIconModule, RouterLink, Expenses, NavigateBackButton],
 })
 export class CategoryPage {
   category!: Category;
