@@ -17,13 +17,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ExpensesState } from '../../state/expenses/expenses.state';
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, Location } from '@angular/common';
 import { CategoryActions } from '../../state/expenses/expenses.action';
-import { NavigateBackButton } from "../../components/navigate-back-button/navigate-back-button";
+import { NavigateBackButton } from '../../components/navigate-back-button/navigate-back-button';
 
 @Component({
   standalone: true,
-  imports: [MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule, MatCheckboxModule, NavigateBackButton],
+  imports: [
+    MatFormFieldModule,
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    NavigateBackButton,
+  ],
   templateUrl: './new-category-page.html',
 })
 export class NewCategoryPage implements AfterViewInit {
@@ -38,8 +45,8 @@ export class NewCategoryPage implements AfterViewInit {
 
   constructor(
     private destroyRef: DestroyRef,
-    private router: Router,
     private snackbarService: SnackbarService,
+    private location: Location,
   ) {}
 
   ngAfterViewInit(): void {
@@ -60,7 +67,7 @@ export class NewCategoryPage implements AfterViewInit {
       .subscribe({
         next: () => {
           this.snackbarService.show(`Created '${this.newName}'`);
-          this.router.navigateByUrl('/');
+          this.location.back();
         },
         error: (message) => {
           this.snackbarService.error(message);

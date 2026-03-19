@@ -18,6 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NavigateBackButton } from "../../../components/navigate-back-button/navigate-back-button";
+import { Location } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -47,6 +48,7 @@ export class EditExpensePage {
     private router: Router,
     private snackbarService: SnackbarService,
     private destroyRef: DestroyRef,
+    private location: Location,
     route: ActivatedRoute,
   ) {
     const id = route.snapshot.paramMap.get('id');
@@ -82,7 +84,7 @@ export class EditExpensePage {
       .subscribe({
         next: () => {
           this.snackbarService.show('Expense edited.');
-          this.router.navigate(['expense', this.expense.id]);
+          this.location.back();
         },
         error: (message) => {
           this.snackbarService.error(message);

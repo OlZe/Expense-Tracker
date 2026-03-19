@@ -11,7 +11,8 @@ import { ExpensesState } from '../../state/expenses/expenses.state';
 import { Expenses } from '../../components/expenses/expenses';
 import { takeUntil } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigateBackButton } from "../../components/navigate-back-button/navigate-back-button";
+import { NavigateBackButton } from '../../components/navigate-back-button/navigate-back-button';
+import { Location } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -26,9 +27,10 @@ export class CategoryPage {
 
   constructor(
     private store: Store,
-    private router: Router,
     private snackbarService: SnackbarService,
     private destroyRef: DestroyRef,
+    private location: Location,
+    router: Router,
     route: ActivatedRoute,
   ) {
     const id = route.snapshot.paramMap.get('id');
@@ -63,7 +65,7 @@ export class CategoryPage {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.router.navigateByUrl('/');
+          this.location.back();
           this.snackbarService.show('Expense created.');
         },
         error: (message) => {

@@ -15,6 +15,7 @@ import { ExpensesState } from '../../../state/expenses/expenses.state';
 import { CategoryActions } from '../../../state/expenses/expenses.action';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NavigateBackButton } from "../../../components/navigate-back-button/navigate-back-button";
+import { Location } from '@angular/common';
 
 type DeleteView =
   | {
@@ -51,6 +52,7 @@ export class EditCategoryDialog {
     private router: Router,
     private snackbarService: SnackbarService,
     private destroyRef: DestroyRef,
+    private location: Location,
     route: ActivatedRoute,
   ) {
     const id = route.snapshot.paramMap.get('id');
@@ -94,7 +96,7 @@ export class EditCategoryDialog {
       .subscribe({
         next: () => {
           this.snackbarService.show(`Changed '${oldCategory.name}' to '${newCategory.name}'.`);
-          this.router.navigateByUrl('/');
+          this.location.back();
         },
         error: (message) => {
           this.snackbarService.error(message);

@@ -19,7 +19,8 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { MatIcon } from '@angular/material/icon';
-import { NavigateBackButton } from "../../components/navigate-back-button/navigate-back-button";
+import { NavigateBackButton } from '../../components/navigate-back-button/navigate-back-button';
+import { Location } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -33,8 +34,8 @@ import { NavigateBackButton } from "../../components/navigate-back-button/naviga
     CdkDragHandle,
     CdkDragPlaceholder,
     CdkDragPreview,
-    NavigateBackButton
-],
+    NavigateBackButton,
+  ],
   templateUrl: './settings-page.html',
 })
 export class SettingsPage {
@@ -45,8 +46,8 @@ export class SettingsPage {
 
   constructor(
     private store: Store,
-    private router: Router,
     private snackbarService: SnackbarService,
+    private location: Location,
   ) {
     this.loadCategoryOrder();
   }
@@ -90,7 +91,7 @@ export class SettingsPage {
       .subscribe({
         next: () => {
           this.snackbarService.show('All data deleted.');
-          this.router.navigateByUrl('/');
+          this.location.back();
         },
         error: (message) => {
           this.snackbarService.error(message);
