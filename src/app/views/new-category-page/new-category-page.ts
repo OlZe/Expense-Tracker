@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   computed,
   DestroyRef,
@@ -47,10 +48,14 @@ export class NewCategoryPage implements AfterViewInit {
     private destroyRef: DestroyRef,
     private snackbarService: SnackbarService,
     private location: Location,
+    private cd: ChangeDetectorRef,
   ) {}
 
   ngAfterViewInit(): void {
-    this.inputElement().nativeElement.focus();
+    // microtask to fix angular error 'value changed after checked'
+    queueMicrotask(() => {
+      this.inputElement().nativeElement.focus();
+    });
   }
 
   isCreateButtonDisabled(): boolean {
