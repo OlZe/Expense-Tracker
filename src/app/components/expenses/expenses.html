@@ -1,9 +1,9 @@
 <h2 class="text-2xl mb-2">Activity</h2>
 @for (timeRange of orderedExpenses().keys(); track $index) {
   <div class="flex items-center mt-2 text-gray-400 text-sm">
-    <p class="mr-3">{{ timeRange }}</p>
+    <p class="ml-1.5 mr-3">{{ timeRange }}</p>
     <div class="flex-1 border-t border-gray-600"></div>
-    <p class="ml-3">
+    <p class="ml-3 mr-1.5">
       {{ expensesSumByTimerange().get(timeRange)! | euro }}
     </p>
   </div>
