@@ -4,11 +4,15 @@
 </div>
 
 <form class="flex flex-col flex-nowrap gap-11" #form="ngForm">
-  <money-input class="mt-6" [initValue]="expense.price" (inputNumber)="changePrice($event)"></money-input>
+  <money-input
+    class="mt-6"
+    [initValue]="expense.price"
+    (inputNumber)="changePrice($event)"
+  ></money-input>
 
   <mat-form-field>
     <mat-label>Date</mat-label>
-    <input matInput [matDatepicker]="daypicker" [(ngModel)]="datetime" name="date" required />
+    <input matInput [matDatepicker]="daypicker" [(ngModel)]="date" name="date" required />
     <mat-datepicker #daypicker></mat-datepicker>
     <mat-datepicker-toggle [for]="daypicker" matSuffix></mat-datepicker-toggle>
   </mat-form-field>
@@ -18,7 +22,7 @@
     <input
       matInput
       [matTimepicker]="timepicker"
-      [(ngModel)]="datetime"
+      [(ngModel)]="time"
       [ngModelOptions]="{ updateOn: 'blur' }"
       name="time"
       required
@@ -26,7 +30,7 @@
     <mat-timepicker #timepicker />
     <mat-timepicker-toggle [for]="timepicker" matSuffix />
   </mat-form-field>
-
+  
   @if (allCategories.length > 0) {
     <mat-form-field>
       <mat-label>Category</mat-label>

@@ -8,8 +8,7 @@ import { ExpensesState } from '../../../state/expenses/expenses.state';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatTimepickerModule } from '@angular/material/timepicker';
-import { MatInput, MatInputModule } from '@angular/material/input';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,8 +16,9 @@ import { ExpensesActions } from '../../../state/expenses/expenses.action';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { NavigateBackButton } from "../../../components/navigate-back-button/navigate-back-button";
-import { Location } from '@angular/common';
+import { NavigateBackButton } from '../../../components/navigate-back-button/navigate-back-button';
+import { JsonPipe, Location } from '@angular/common';
+import { DateTime } from 'luxon';
 
 @Component({
   standalone: true,
@@ -33,13 +33,14 @@ import { Location } from '@angular/common';
     MatButtonModule,
     MatIconModule,
     MatCheckboxModule,
-    NavigateBackButton
-],
+    NavigateBackButton,
+  ],
   templateUrl: './edit-expense-page.html',
 })
 export class EditExpensePage {
   expense!: Expense;
-  datetime!: Date;
+  date!: DateTime;
+  time!: DateTime;
   allCategories!: Category[];
   deleteConfirmed = false;
 
@@ -62,7 +63,8 @@ export class EditExpensePage {
       return;
     }
     this.expense = expense;
-    this.datetime = new Date(this.expense.datetime);
+    this.date = DateTime.fromISO(this.expense.datetime);
+    this.time = DateTime.fromISO(this.expense.datetime);
     this.allCategories = store.selectSnapshot(ExpensesState.getCategories);
   }
 
@@ -71,10 +73,17 @@ export class EditExpensePage {
   }
 
   saveExpense() {
+    const datetime = this.date.set({
+      hour: this.time.hour,
+      minute: this.time.minute,
+      second: this.time.second,
+      millisecond: this.time.millisecond,
+    });
+
     const newExpense: Expense = {
       id: this.expense.id,
       price: this.expense.price,
-      datetime: this.datetime.toISOString(),
+      datetime: datetime.toISO()!,
       categoryId: this.expense.categoryId,
     };
 
