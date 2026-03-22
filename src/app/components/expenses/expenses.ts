@@ -1,9 +1,7 @@
 import { Component, computed, input, Signal } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { ExpensesState } from '../../state/expenses/expenses.state';
 import { ExpenseWithCategory } from '../../state/expenses/expenses.model';
 import { EuroPipe } from '../../pipes/EuroPipe';
-import { RouterLink, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 type TimeRange = 'today' | 'yesterday' | 'last 7 days' | 'last 30 days' | 'older';
 
@@ -26,6 +24,15 @@ export class Expenses {
     }
 
     return orderedExpenses;
+  });
+  expensesSumByTimerange = computed(() => {
+    let expensesSumByTimerange = new Map<TimeRange, number>();
+
+    for (const [timerange, expenses] of this.orderedExpenses().entries()) {
+      const sum = expenses.reduce((sum, expense) => sum + expense.price, 0);
+      expensesSumByTimerange.set(timerange, sum);
+    }
+    return expensesSumByTimerange;
   });
 
   private getTimeRange(date: Date): TimeRange {

@@ -1,9 +1,11 @@
 <h2 class="text-2xl mb-2">Activity</h2>
-@for (timeRange of orderedExpenses().keys(); track timeRange) {
-  <div class="flex items-center mt-2">
-    <div class="flex-1 border-b border-gray-600"></div>
-    <p class="text-gray-400 text-sm ml-3 mr-3">{{ timeRange }}</p>
+@for (timeRange of orderedExpenses().keys(); track $index) {
+  <div class="flex items-center mt-2 text-gray-400 text-sm">
+    <p class="mr-3">{{ timeRange }}</p>
     <div class="flex-1 border-t border-gray-600"></div>
+    <p class="ml-3">
+      {{ expensesSumByTimerange().get(timeRange)! | euro }}
+    </p>
   </div>
 
   @for (expense of orderedExpenses().get(timeRange); track expense.id) {
