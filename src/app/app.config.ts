@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideStore(
       [ExpensesState],
       withNgxsStoragePlugin({ keys: '*' }),
-      withNgxsReduxDevtoolsPlugin(),
+      withNgxsReduxDevtoolsPlugin({ disabled: !isDevMode() }),
     ),
     provideLuxonDateAdapter(),
     { provide: MAT_DATE_LOCALE, useValue: 'de-DE' },
