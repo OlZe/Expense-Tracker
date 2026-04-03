@@ -3,7 +3,7 @@ import { ExpenseWithCategory } from '../../state/expenses/expenses.model';
 import { EuroPipe } from '../../pipes/EuroPipe';
 import { RouterModule } from '@angular/router';
 
-type TimeRange = 'today' | 'yesterday' | 'last 7 days' | 'last 30 days' | 'older';
+type TimeRange = string;
 
 @Component({
   templateUrl: 'expenses.html',
@@ -13,22 +13,24 @@ type TimeRange = 'today' | 'yesterday' | 'last 7 days' | 'last 30 days' | 'older
 export class Expenses {
   emptyMessage = input<string>('No expenses.');
   expenses = input.required<ExpenseWithCategory[]>();
-  orderedExpenses: Signal<Map<TimeRange, ExpenseWithCategory[]>> = computed(() => {
-    let orderedExpenses = new Map<TimeRange, ExpenseWithCategory[]>();
-
-    for (const expense of this.expenses().slice().sort().reverse()) {
+  orderedExpensesByTimerange: Signal<Map<TimeRange, ExpenseWithCategory[]>> = computed(() => {
+    let orderedExpensesByTimerange = new Map<TimeRange, ExpenseWithCategory[]>();
+    const orderedExpenses = this.expenses()
+      .slice()
+      .sort((a, b) => b.datetime.localeCompare(a.datetime));
+    for (const expense of orderedExpenses) {
       const key = this.getTimeRange(new Date(expense.datetime));
-      let value = orderedExpenses.get(key) ?? [];
+      let value = orderedExpensesByTimerange.get(key) ?? [];
       value.push(expense);
-      orderedExpenses.set(key, value);
+      orderedExpensesByTimerange.set(key, value);
     }
 
-    return orderedExpenses;
+    return orderedExpensesByTimerange;
   });
   expensesSumByTimerange = computed(() => {
     let expensesSumByTimerange = new Map<TimeRange, number>();
 
-    for (const [timerange, expenses] of this.orderedExpenses().entries()) {
+    for (const [timerange, expenses] of this.orderedExpensesByTimerange().entries()) {
       const sum = expenses.reduce((sum, expense) => sum + expense.price, 0);
       expensesSumByTimerange.set(timerange, sum);
     }
@@ -36,14 +38,27 @@ export class Expenses {
   });
 
   private getTimeRange(date: Date): TimeRange {
-    const today = new Date().setHours(0, 0, 0, 0);
-    const d = new Date(date).setHours(0, 0, 0, 0);
-    const diffInDays = (today - d) / 86400000;
+    const today = new Date();
 
-    if (diffInDays === 0) return 'today';
-    if (diffInDays === 1) return 'yesterday';
-    if (diffInDays <= 7) return 'last 7 days';
-    if (diffInDays <= 30) return 'last 30 days';
-    return 'older';
+    if(date.getTime() > today.getTime()) {
+      return 'future';
+    }
+
+    if (date.getFullYear() !== today.getFullYear()) {
+      // Different year => Return format: <month year>
+      return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+    }
+
+    if (date.getMonth() !== today.getMonth()) {
+      // Different month => Return format: <month>
+      return date.toLocaleDateString(undefined, { month: 'long' });
+    }
+
+    // Same month => return 'today' | 'yesterday' | 'last 7 days in this month' | '<month>'
+    const daysDelta = today.getDate() - date.getDate();
+    if (daysDelta === 0) return 'today';
+    if (daysDelta === 1) return 'yesterday';
+    if (daysDelta <= 7) return 'last 7 days in this month';
+    return date.toLocaleDateString(undefined, { month: 'long' });
   }
 }
