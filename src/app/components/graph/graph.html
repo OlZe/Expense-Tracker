@@ -1,16 +1,23 @@
-<div id="chart">
-  <apx-chart
-    [chart]="{
-      type: 'donut',
-      background: '#00000',
-    }"
-    [series]="chartOptions().series"
-    [labels]="chartOptions().labels"
-    [dataLabels]="chartOptions().dataLabels"
-    [theme]="{ mode: 'dark', palette: 'palette6' }"
-    [plotOptions]="{ pie: { expandOnClick: false } }"
-    [stroke]="{ show: false }"
-    [legend]="{ formatter: (seriesName) => `&nbsp;${seriesName}` }"
-  >
-  </apx-chart>
-</div>
+<apx-chart
+  [chart]="{
+    type: 'donut',
+    background: '#00000',
+    animations: {
+      enabled: false,
+    },
+  }"
+  [series]="chartOptions().series"
+  [labels]="chartOptions().labels"
+  [dataLabels]="chartOptions().dataLabels"
+  [theme]="{ mode: 'dark', palette: 'palette6' }"
+  [plotOptions]="{ pie: { expandOnClick: false } }"
+  [stroke]="{ show: false }"
+  [legend]="{ formatter: (seriesName) => `&nbsp;${seriesName}` }"
+>
+</apx-chart>
+
+<mat-chip-listbox class="mt-2" [(ngModel)]="selectedTimerangeButton">
+  @for (timerangeButton of timerangeButtons; track $index) {
+    <mat-chip-option [value]="timerangeButton.value">{{ timerangeButton.label }}</mat-chip-option>
+  }
+</mat-chip-listbox>

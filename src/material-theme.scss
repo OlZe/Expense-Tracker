@@ -17,6 +17,14 @@
   ));
 }
 
+:root {
+  @include mat.chips-overrides((
+    outline-width: 1px,
+    outline-color: #364153,
+    label-text-color: oklch(0.707 0.022 261.325),
+  ))
+}
+
 html {
   height: 100%;
   @include mat.theme(
