@@ -3,9 +3,11 @@
   <a [routerLink]="'settings'"><mat-icon>settings</mat-icon></a>
 </div>
 
-<div class="mt-5">
-  <graph [allExpenses]="allExpenses()"></graph>
-</div>
+@if (allExpenses().length > 0) {
+  <div class="mt-5">
+    <graph [allExpenses]="allExpenses()"></graph>
+  </div>
+}
 
 <h2 class="text-2xl mt-10 mb-4">Create expense</h2>
 <category-cards class="block"></category-cards>

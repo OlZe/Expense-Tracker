@@ -1,20 +1,27 @@
-<apx-chart
-  [chart]="{
-    type: 'donut',
-    background: '#00000',
-    animations: {
-      enabled: false,
-    },
-  }"
-  [series]="chartOptions().series"
-  [labels]="chartOptions().labels"
-  [dataLabels]="chartOptions().dataLabels"
-  [theme]="{ mode: 'dark', palette: 'palette6' }"
-  [plotOptions]="{ pie: { expandOnClick: false } }"
-  [stroke]="{ show: false }"
-  [legend]="{ formatter: (seriesName) => `&nbsp;${seriesName}` }"
->
-</apx-chart>
+@if (graphData().length > 0) {
+  <apx-chart
+    [chart]="{
+      type: 'donut',
+      background: '#00000',
+      animations: {
+        enabled: false,
+      },
+    }"
+    [series]="chartOptions().series"
+    [labels]="chartOptions().labels"
+    [dataLabels]="chartOptions().dataLabels"
+    [theme]="{ mode: 'dark', palette: 'palette6' }"
+    [plotOptions]="{ pie: { expandOnClick: false } }"
+    [stroke]="{ show: false }"
+    [legend]="{ formatter: (seriesName) => `&nbsp;${seriesName}` }"
+  >
+  </apx-chart>
+} @else {
+  <p class="text-center text-gray-400 text-sm mt-20 mb-20">
+    No data available for this itme.<br />
+    Select another time below.
+  </p>
+}
 
 <mat-chip-listbox
   class="mt-2"
