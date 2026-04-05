@@ -1,20 +1,23 @@
-import { Component, computed, ElementRef, input, signal, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { ExpenseWithCategory } from '../../state/expenses/expenses.model';
 import { ApexDataLabels, NgApexchartsModule } from 'ng-apexcharts';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
-
-type Timerange = 'one-day' | 'one-week' | 'one-month' | 'one-year' | 'max';
+import { PiechartTimerange } from '../../state/ui/ui.model';
+import { Store } from '@ngxs/store';
+import { UiState } from '../../state/ui/ui.state';
+import { UiActions } from '../../state/ui/ui.action';
 
 @Component({
   standalone: true,
-  imports: [NgApexchartsModule, MatChipsModule, FormsModule],
+  imports: [NgApexchartsModule, MatChipsModule],
   templateUrl: './graph.html',
   selector: 'graph',
 })
 export class Graph {
-  selectedTimerangeButton = signal<Timerange>('max');
-  timerangeButtons: { value: Timerange; label: string }[] = [
+  private store = inject(Store);
+  selectedTimerangeButton = this.store.selectSignal(UiState.getSelectedPiechartTimerange);
+  timerangeButtons: { value: PiechartTimerange; label: string }[] = [
     { value: 'one-day', label: '1D' },
     { value: 'one-week', label: '1W' },
     { value: 'one-month', label: '1M' },
@@ -72,5 +75,9 @@ export class Graph {
     }
 
     return Object.entries(record).sort((a, b) => b[1] - a[1]);
+  }
+
+  onTimerangeChange(value: PiechartTimerange) {
+    this.store.dispatch(new UiActions.SelectPiechartTimerange(value));
   }
 }

@@ -14,13 +14,14 @@ import { ExpensesState } from './state/expenses/expenses.state';
 import { HomePage } from './views/home-page/home-page';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { provideServiceWorker } from '@angular/service-worker';
+import { UiState } from './state/ui/ui.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withHashLocation()),
     provideStore(
-      [ExpensesState],
+      [ExpensesState, UiState],
       withNgxsStoragePlugin({ keys: '*' }),
       withNgxsReduxDevtoolsPlugin({ disabled: !isDevMode() }),
     ),

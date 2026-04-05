@@ -16,7 +16,11 @@
 >
 </apx-chart>
 
-<mat-chip-listbox class="mt-2" [(ngModel)]="selectedTimerangeButton">
+<mat-chip-listbox
+  class="mt-2"
+  [value]="selectedTimerangeButton()"
+  (change)="onTimerangeChange($event.value)"
+>
   @for (timerangeButton of timerangeButtons; track $index) {
     <mat-chip-option [value]="timerangeButton.value">{{ timerangeButton.label }}</mat-chip-option>
   }
