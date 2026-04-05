@@ -11,7 +11,7 @@ import { NavigateBackButton } from '../../components/navigate-back-button/naviga
 @Component({
   standalone: true,
   templateUrl: './home-page.html',
-  imports: [CategoryCards, Expenses, MatIcon, RouterLink],
+  imports: [CategoryCards, Expenses, MatIcon, RouterLink, Graph],
 })
 export class HomePage {
   allExpenses = inject(Store).selectSignal(ExpensesState.getExpensesWithCategory);

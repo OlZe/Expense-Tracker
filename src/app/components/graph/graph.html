@@ -1,3 +1,16 @@
-<div class="w-xs h-xs">
-  <span>Graph Component</span>
+<div id="chart">
+  <apx-chart
+    [chart]="{
+      type: 'donut',
+      background: '#00000',
+    }"
+    [series]="chartOptions().series"
+    [labels]="chartOptions().labels"
+    [dataLabels]="chartOptions().dataLabels"
+    [theme]="{ mode: 'dark', palette: 'palette6' }"
+    [plotOptions]="{ pie: { expandOnClick: false } }"
+    [stroke]="{ show: false }"
+    [legend]="{ formatter: (seriesName) => `&nbsp;${seriesName}` }"
+  >
+  </apx-chart>
 </div>

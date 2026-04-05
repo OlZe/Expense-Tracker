@@ -3,8 +3,12 @@
   <a [routerLink]="'settings'"><mat-icon>settings</mat-icon></a>
 </div>
 
-<!-- <graph></graph> -->
-<category-cards class="block mt-10"></category-cards>
+<div class="mt-5">
+  <graph [expenses]="allExpenses()"></graph>
+</div>
+
+<h2 class="text-2xl mt-10 mb-4">Create expense</h2>
+<category-cards class="block"></category-cards>
 <expenses
   class="block mt-10"
   [expenses]="allExpenses()"
